@@ -1,10 +1,10 @@
-char c += "ab+c"
+char c <=%= "ab+c"
 asasa"asasaa+sasaas"= || 
-void main()
+void main() 'i'
 {
-Int a*=77+8abc+a-b-b-c):;
+Int a*=+77+8abc+a-b-b-c):;
 while(a<c&&bccd*e)
 char c === "ab+c"asa=sa"as==asaa+sasaas"=== || 
-a+'||'+'\n'+b+++=cd
+a+b+++=cd
 float b-=10121;
 }

@@ -23,8 +23,12 @@ class WordBreak
 
   void checkalpha(char array[], int wordCount)
   {
+
     string isalpha = "[a-zA-Z]|[0-9]";
-    string special = "[=|\\+|-|\\*|/|\\||&|!|]";
+    // string charA ="[\\\\][nortb]";
+    // string charB="[\\\\][\\'\\\"\\\\]";
+    // string charC="[!@#$%^&*()_=+-|:;,.?}~`{]";
+    // string charConst=charC+"|"+charA+"+|"+charB+"|"+charA;
     string word="";
     bool match = true;
     int i=0;
@@ -34,12 +38,11 @@ class WordBreak
       bool check = true;
       string covertStr(1,array[arrindex]);
       regex regstr(isalpha);
+
      
      if(array[arrindex]=='=' || array[arrindex]=='+' ||  array[arrindex]=='-' || array[arrindex]=='*' || array[arrindex]=='/' || array[arrindex]=='<' || array[arrindex]=='>' || array[arrindex]=='!' || array[arrindex]=='%')
         {
-          // i++;
-          // cout<<array[arrindex];
-          //  arrindex++;
+          
           if(array[arrindex+1]=='=')
           {
             i++;
@@ -47,28 +50,11 @@ class WordBreak
           arrindex++;
           cout<<array[arrindex];
           arrindex++;
-          //arrindex++;
+      
           }
 
         }
 
-
-        // if(array[arrindex]=='+' ||  array[arrindex]=='-' || array[arrindex]=='*' || array[arrindex]=='/')
-        // {
-        //   // i++;
-        //   // cout<<array[arrindex];
-        //   //  arrindex++;
-        //   if(array[arrindex+1]=='=')
-        //   {
-        //     i++;
-        //   cout<<array[arrindex];
-        //   arrindex++;
-        //   cout<<array[arrindex];
-        //   arrindex++;
-        //   //arrindex++;
-        //   }
-
-        // }
 
       match = regex_match(covertStr,regstr);
       while(match)
@@ -84,7 +70,7 @@ class WordBreak
         
        }
       }
-       regex regstr2(special);
+
       
       if(i>0)
       {
@@ -92,48 +78,61 @@ class WordBreak
         i=0;
       }
 
-      if(array[arrindex]=='\"')
+      if(array[arrindex]=='\"' )
         {
           cout<<array[arrindex];
           arrindex++;
-          while(array[arrindex]!='\"')
+          while(array[arrindex]!='\"' )
           {
             cout<<array[arrindex];
             arrindex++;
           }
         }
 
-        if(array[arrindex]=='=' || array[arrindex]=='+' ||  array[arrindex]=='-' || array[arrindex]=='*' || array[arrindex]=='/' || array[arrindex]=='<' || array[arrindex]=='>' || array[arrindex]=='!' || array[arrindex]=='%'))
+        if(array[arrindex]=='=' || array[arrindex]=='+' ||  array[arrindex]=='-' || array[arrindex]=='*' || array[arrindex]=='/' || array[arrindex]=='<' || array[arrindex]=='>' || array[arrindex]=='!' || array[arrindex]=='%')
         {
-          // i++;
-          // cout<<array[arrindex];
-          //  arrindex++;
           if(array[arrindex+1]=='=')
           {
-            i++;
+          i++;
           cout<<array[arrindex];
           arrindex++;
           cout<<array[arrindex];
           arrindex++;
-          //arrindex++;
           }
 
         }
+        
+        if((array[arrindex]=='+' && array[arrindex+1]=='+') || (array[arrindex]=='-' && array[arrindex+1]=='-') || (array[arrindex]=='&' && array[arrindex+1]=='&') || (array[arrindex]=='|' && array[arrindex+1]=='|')  || (array[arrindex]==':' && array[arrindex+1]==':')) 
+        {
+          i++;
+          cout<<array[arrindex];
+          arrindex++;
+          cout<<array[arrindex];
+          arrindex++;
+        }
+
+        
+
 
         if(i>0)
       {
         cout<<endl;
         i=0;
       }
-        
-      if(array[arrindex]!=' ' && array[arrindex]!='\n' )
+        string acovertStr(1,array[arrindex]);
+        match = regex_match(acovertStr,regstr);
+      if(!match)
       {
         cout<<array[arrindex]<<endl;
       }
+      else
+      {
+        arrindex--;
+      }
+      
     }
 
   }
 
-  private:
 
 };
