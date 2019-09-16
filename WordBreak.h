@@ -1,7 +1,9 @@
 #include<iostream>
 #include<fstream>
 #include<regex>
+#include"Token.h"
 #include<string>
+Token token;
 using namespace std;
 
 class WordBreak
@@ -21,6 +23,7 @@ class WordBreak
     //cout<<checkalpha(charArr)<<endl;
   }
 
+
   void checkalpha(char array[], int wordCount)
   {
 
@@ -29,12 +32,14 @@ class WordBreak
     // string charB="[\\\\][\\'\\\"\\\\]";
     // string charC="[!@#$%^&*()_=+-|:;,.?}~`{]";
     // string charConst=charC+"|"+charA+"+|"+charB+"|"+charA;
-    string word="";
     bool match = true;
     int i=0;
     int arrindex=0;
     for(arrindex=0;arrindex<=wordCount;arrindex++)
     {
+      bool wordover = false;
+      string word="";
+      i=0;
       bool check = true;
       string covertStr(1,array[arrindex]);
       regex regstr(isalpha);
@@ -45,15 +50,25 @@ class WordBreak
           
           if(array[arrindex+1]=='=')
           {
-            i++;
-          cout<<array[arrindex];
+            
+            wordover = true;
+            word+=array[arrindex];
+          //cout<<array[arrindex];
           arrindex++;
-          cout<<array[arrindex];
+         // cout<<array[arrindex];
+         word+=array[arrindex];
           arrindex++;
       
           }
-
         }
+
+        if(wordover)
+          {
+            //cout<<word<<endl;
+            token.generateToken(word);
+            word="";
+            wordover=false;
+          }
 
 
       match = regex_match(covertStr,regstr);
@@ -63,30 +78,56 @@ class WordBreak
        {
          i++;
         check = false;
-        cout<<array[arrindex];
+        wordover=true;
+        word+=array[arrindex];
+        //cout<<array[arrindex];
         arrindex++;
         string covertStr(1,array[arrindex]);
         match = regex_match(covertStr,regstr);
-        
        }
       }
-
       
+
+      if(wordover)
+      {
+        //cout<<word;
+        token.generateToken(word);
+        wordover=false;
+        word="";
+      }
+
       if(i>0)
       {
-        cout<<endl;
+       // cout<<endl;
         i=0;
       }
 
       if(array[arrindex]=='\"' )
         {
-          cout<<array[arrindex];
+          i++;
+          wordover=true;
+          word+=array[arrindex];
+         // cout<<array[arrindex];
           arrindex++;
           while(array[arrindex]!='\"' )
           {
-            cout<<array[arrindex];
+            wordover=true;
+            i++;
+            word+=array[arrindex];
+           // cout<<array[arrindex];
             arrindex++;
           }
+           word+=array[arrindex];
+           // cout<<array[arrindex];
+            arrindex++;
+        }
+        if(wordover)
+        {
+         //cout<<word;
+         token.generateToken(word);
+          word="";
+          wordover=false;
+          i=0;
         }
 
         if(array[arrindex]=='=' || array[arrindex]=='+' ||  array[arrindex]=='-' || array[arrindex]=='*' || array[arrindex]=='/' || array[arrindex]=='<' || array[arrindex]=='>' || array[arrindex]=='!' || array[arrindex]=='%')
@@ -94,36 +135,60 @@ class WordBreak
           if(array[arrindex+1]=='=')
           {
           i++;
-          cout<<array[arrindex];
+          wordover=true;
+          word+=array[arrindex];
+         // cout<<array[arrindex];
           arrindex++;
-          cout<<array[arrindex];
+          word+=array[arrindex];
+          //cout<<array[arrindex];
           arrindex++;
           }
 
+        }
+
+        if(wordover)
+        {
+          //cout<<word;
+          token.generateToken(word);
+          word="";
+          wordover=false;
         }
         
         if((array[arrindex]=='+' && array[arrindex+1]=='+') || (array[arrindex]=='-' && array[arrindex+1]=='-') || (array[arrindex]=='&' && array[arrindex+1]=='&') || (array[arrindex]=='|' && array[arrindex+1]=='|')  || (array[arrindex]==':' && array[arrindex+1]==':')) 
         {
           i++;
-          cout<<array[arrindex];
+          wordover=true;
+          word+=array[arrindex];
+          //cout<<array[arrindex];
           arrindex++;
-          cout<<array[arrindex];
+          word+=array[arrindex];
+          //cout<<array[arrindex];
           arrindex++;
         }
 
+         if(wordover)
+      {
+       // cout<<word;
+       token.generateToken(word);
+        wordover=false;
+        word="";
+      }
         
-
-
         if(i>0)
       {
-        cout<<endl;
+        //cout<<endl;
         i=0;
       }
+
+     
         string acovertStr(1,array[arrindex]);
         match = regex_match(acovertStr,regstr);
       if(!match)
       {
-        cout<<array[arrindex]<<endl;
+        word+=array[arrindex];
+        //cout<<word<<endl;
+        token.generateToken(word);
+        word="";
       }
       else
       {
