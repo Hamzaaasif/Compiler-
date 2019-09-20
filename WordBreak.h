@@ -109,7 +109,7 @@ class WordBreak
           word+=array[arrindex];
          // cout<<array[arrindex];
           arrindex++;
-          while(array[arrindex]!='\"' )
+          while(array[arrindex]!='\"'  && array[arrindex] !='\n' )
           {
             wordover=true;
             i++;

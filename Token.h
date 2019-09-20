@@ -3,7 +3,7 @@
 using namespace std;
 string DT[5]= {"int","float","char","string","bool"};
 
-string keyword[24]={"for","while","if","else","switch","case","break","return","void","main","default","null","class","public","private","protected","this","continue","break","new","operator","static","true","false"};
+string keyword[22]={"for","while","if","else","switch","case","break","return","void","main","default","null","class","public","private","protected","this","continue","break","new","operator","static"};
 
 string pucntuators[14] = {",",";",":","::","{","}","->",".","(",")","<<",">>","[","]"};
 
@@ -27,7 +27,7 @@ bool checkkeyword(string word)
 {
   int i;
   bool check = false;
-  for(i=0;i<24;i++)
+  for(i=0;i<22;i++)
   {
     if(word == keyword[i])
     {
@@ -164,12 +164,21 @@ bool checkuniary(string word)
        this->vp=word;
        cout<<"CP : " << cp <<" VP : " << vp<<endl;
      }
+
+     else if (word == "true" || word == "false")
+   {
+     this->cp="boolconst";
+     this->vp=word;
+     cout<<"CP : " << cp <<" VP : " << vp<<endl;
+   }
+
      else
      {
        this->cp="IDF";
        this->vp=word;
        cout<<"CP : " << cp <<" VP : " << vp<<endl;
      }
+     
      
    }
    else if (isint)
@@ -220,7 +229,7 @@ bool checkuniary(string word)
    {
 
    }
-   else if(word[0]=='\"')
+   else if(word[0]=='\"' && word[(word.size()-1)]=='\"')
    {
      this->cp="stringconst";
      this->vp=word;
