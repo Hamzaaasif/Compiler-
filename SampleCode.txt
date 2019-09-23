@@ -1,13 +1,4 @@
 int main ()
 {
-  int hamza = "hello wordld";
+  int hamza = "hello wo\"rdld";
   if(a>b)
-  {
-    while(a %= 67)
-    {
-      bool check = true;
-      "jamaaa"
-      static keyword == 67+12;
-    }
-  }
-}

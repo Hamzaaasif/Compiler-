@@ -19,19 +19,14 @@ class WordBreak
       wordcout++;
     } 
     
-    checkalpha(charArr,wordcout);
-    //cout<<checkalpha(charArr)<<endl;
+    split(charArr,wordcout);
   }
 
 
-  void checkalpha(char array[], int wordCount)
+  void split(char array[], int wordCount)
   {
-
+    string intconst="[+|-][[:digit:]]+|[0-9]+";
     string isalpha = "[a-zA-Z]|[0-9]";
-    // string charA ="[\\\\][nortb]";
-    // string charB="[\\\\][\\'\\\"\\\\]";
-    // string charC="[!@#$%^&*()_=+-|:;,.?}~`{]";
-    // string charConst=charC+"|"+charA+"+|"+charB+"|"+charA;
     bool match = true;
     int i=0;
     int arrindex=0;
@@ -65,7 +60,7 @@ class WordBreak
         if(wordover)
           {
             //cout<<word<<endl;
-            token.generateToken(word);
+            token.generateToken(word, lineno);
             word="";
             wordover=false;
           }
@@ -91,7 +86,7 @@ class WordBreak
       if(wordover)
       {
         //cout<<word;
-        token.generateToken(word);
+        token.generateToken(word, lineno);
         wordover=false;
         word="";
       }
@@ -109,13 +104,20 @@ class WordBreak
           word+=array[arrindex];
          // cout<<array[arrindex];
           arrindex++;
-          while(array[arrindex]!='\"'  && array[arrindex] !='\n' )
+          while(array[arrindex]!='\"'  && arrindex != wordCount )
           {
             wordover=true;
             i++;
             word+=array[arrindex];
            // cout<<array[arrindex];
             arrindex++;
+            if(array[arrindex] == '\\' && array[arrindex+1] == '\"')
+            {
+            word+=array[arrindex];
+            arrindex++;
+            word+=array[arrindex];
+            arrindex++;
+            }
           }
            word+=array[arrindex];
            // cout<<array[arrindex];
@@ -124,7 +126,7 @@ class WordBreak
         if(wordover)
         {
          //cout<<word;
-         token.generateToken(word);
+         token.generateToken(word, lineno);
           word="";
           wordover=false;
           i=0;
@@ -149,7 +151,7 @@ class WordBreak
         if(wordover)
         {
           //cout<<word;
-          token.generateToken(word);
+          token.generateToken(word, lineno);
           word="";
           wordover=false;
         }
@@ -169,7 +171,7 @@ class WordBreak
          if(wordover)
       {
        // cout<<word;
-       token.generateToken(word);
+       token.generateToken(word, lineno);
         wordover=false;
         word="";
       }
@@ -179,7 +181,10 @@ class WordBreak
         //cout<<endl;
         i=0;
       }
-
+      if(array[arrindex] == '\n')
+      {
+        lineno++;
+      }
      
         string acovertStr(1,array[arrindex]);
         match = regex_match(acovertStr,regstr);
@@ -187,7 +192,7 @@ class WordBreak
       {
         word+=array[arrindex];
         //cout<<word<<endl;
-        token.generateToken(word);
+        token.generateToken(word, lineno);
         word="";
       }
       else
@@ -200,4 +205,5 @@ class WordBreak
   }
 
 
+int lineno=1;
 };

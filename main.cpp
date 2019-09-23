@@ -8,4 +8,4 @@ int main()
   letter.Letter();
   cout<<endl;
   system("pause");
-}
+};

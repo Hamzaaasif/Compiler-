@@ -139,13 +139,14 @@ bool checkuniary(string word)
 }
 
 
-  void generateToken(string word)
+  void generateToken(string word , int line)
   {
     string idf="[a-zA-Z]|[a-zA-Z][[:alnum:]]+";
     string intconst="[+|-][[:digit:]]+|[0-9]+";
     string floatconst="[+|-][0-9]*\\.[0-9]+|[0-9]*\\.[0-9]+";
     regex idfreg(idf);
     bool identifier = regex_match(word,idfreg);
+    this->lineno=line;
 
     regex regint(intconst);
     bool isint = regex_match(word,regint);
@@ -156,74 +157,72 @@ bool checkuniary(string word)
      {
        this->cp="DT";
        this->vp=word;
-       cout<<"CP : " << cp <<" VP : " << vp<<endl;
+       cout<<" CP : " << cp <<"  VP : " << vp << "  Line no:  "<<this->lineno<<endl;
      }
      else if( checkkeyword(word))
      {
        this->cp=word;
        this->vp=word;
-       cout<<"CP : " << cp <<" VP : " << vp<<endl;
+      cout<<" CP : " << this->cp <<"  VP : " << this->vp << "  Line no:  "<<this->lineno<<endl;
      }
 
      else if (word == "true" || word == "false")
    {
      this->cp="boolconst";
      this->vp=word;
-     cout<<"CP : " << cp <<" VP : " << vp<<endl;
+    cout<<" CP : " << this->cp <<"  VP : " << this->vp << "  Line no:  "<<this->lineno<<endl;
    }
 
      else
      {
        this->cp="IDF";
        this->vp=word;
-       cout<<"CP : " << cp <<" VP : " << vp<<endl;
+       cout<<" CP : " << this->cp <<"  VP : " << this->vp << "  Line no:  "<<this->lineno<<endl;
      }
-     
-     
    }
    else if (isint)
    {
      this->cp="intconst";
      this->vp=word;
-     cout<<"CP : " << cp <<" VP : " << vp<<endl;
+     cout<<" CP : " << this->cp <<"  VP : " << this->vp << "  Line no:  "<<this->lineno<<endl;
    }
 
    else if(checkpunc(word) || word == "&&" || word == "||" )
    {
      this->cp=word;
      this->vp=word;
-     cout<<"CP : " << cp <<" VP : " << vp<<endl;
+     cout<<" CP : " << this->cp <<"  VP : " << this->vp << "  Line no:  "<<this->lineno<<endl;
    }
 
    else if(checkPM(word))
    {
      this->cp="PM";
      this->vp=word;
-     cout<<"CP : " << cp <<" VP : " << vp<<endl;
+    cout<<" CP : " << this->cp <<"  VP : " << this->vp << "  Line no:  "<<this->lineno<<endl;
    }
    else if(checkndm(word))
    {
      this->cp="NDM";
      this->vp=word;
-     cout<<"CP : " << cp <<" VP : " << vp<<endl;
+     cout<<" CP : " << this->cp <<"  VP : " << this->vp << "  Line no:  "<<this->lineno<<endl;
    }
    else if(checkROP(word))
    {
      this->cp="ROP";
      this->vp=word;
-     cout<<"CP : " << cp <<" VP : " << vp<<endl;
+     cout<<" CP : " << this->cp <<"  VP : " << this->vp << "  Line no:  "<<this->lineno<<endl;
    }
    else if(checkAOP(word))
    {
      this->cp="AOP";
      this->vp=word;
-     cout<<"CP : " << cp <<" VP : " << vp<<endl;
+     cout<<" CP : " << this->cp <<"  VP : " << this->vp << "  Line no:  "<<this->lineno<<endl;
    }
    else if(checkuniary(word))
    {
      this->cp="uniary";
      this->vp=word;
-     cout<<"CP : " << cp <<" VP : " << vp<<endl;
+    cout<<" CP : " << this->cp <<"  VP : " << this->vp << "  Line no:  "<<this->lineno<<endl;
    }
    else if(word==" " || word=="\n")
    {
@@ -233,15 +232,14 @@ bool checkuniary(string word)
    {
      this->cp="stringconst";
      this->vp=word;
-     cout<<"CP : " << cp <<" VP : " << vp<<endl;
+     cout<<" CP : " << this->cp <<"  VP : " << this->vp << "  Line no:  "<<this->lineno<<endl;
    }
    else
    {
      this->cp="invalid lexene";
      this->vp=word;
-     cout<<"CP : " << cp <<" VP : " << vp<<endl;
+     cout<<" CP : " << this->cp <<"  VP : " << this->vp << "  Line no:  "<<this->lineno<<endl;
    }
-   
    
   }
 
