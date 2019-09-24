@@ -155,6 +155,35 @@ class WordBreak
           word="";
           wordover=false;
         }
+
+
+
+        if(array[arrindex]=='\'')
+        {
+          wordover=true;
+          word+=array[arrindex];
+          arrindex++;
+          if(array[arrindex]=='\\')
+          {
+            word+=array[arrindex];
+            arrindex++;
+          }
+            word+=array[arrindex];
+            arrindex++;
+            word+=array[arrindex];
+            arrindex++;
+        }
+
+        if(wordover)
+        {
+          //cout<<word;
+          token.generateToken(word, lineno);
+          word="";
+          wordover=false;
+
+        }
+
+
         
         if((array[arrindex]=='+' && array[arrindex+1]=='+') || (array[arrindex]=='-' && array[arrindex+1]=='-') || (array[arrindex]=='&' && array[arrindex+1]=='&') || (array[arrindex]=='|' && array[arrindex+1]=='|')  || (array[arrindex]==':' && array[arrindex+1]==':')) 
         {
@@ -181,14 +210,41 @@ class WordBreak
         //cout<<endl;
         i=0;
       }
+
+
+      if(array[arrindex]=='=' || array[arrindex]=='+' ||  array[arrindex]=='-' || array[arrindex]=='*' || array[arrindex]=='/' || array[arrindex]=='<' || array[arrindex]=='>' || array[arrindex]=='!' || array[arrindex]=='%')
+        {
+          if(array[arrindex+1]=='=')
+          {
+          i++;
+          wordover=true;
+          word+=array[arrindex];
+         // cout<<array[arrindex];
+          arrindex++;
+          word+=array[arrindex];
+          //cout<<array[arrindex];
+          arrindex++;
+          }
+
+        }
+
+        if(wordover)
+        {
+          //cout<<word;
+          token.generateToken(word, lineno);
+          word="";
+          wordover=false;
+        }
+
+
       if(array[arrindex] == '\n')
       {
         lineno++;
       }
-     
+    
         string acovertStr(1,array[arrindex]);
         match = regex_match(acovertStr,regstr);
-      if(!match)
+      if(!match  &&  array[arrindex] !='\'')
       {
         word+=array[arrindex];
         //cout<<word<<endl;

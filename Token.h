@@ -7,8 +7,6 @@ string keyword[22]={"for","while","if","else","switch","case","break","return","
 
 string pucntuators[14] = {",",";",":","::","{","}","->",".","(",")","<<",">>","[","]"};
 
-// string operators[30]={"+","-","/","*","<",">","=","==","+=","-+","/=","%=","<=",">=","||","&&","!=","++","--"};
-
 string PM[2]={"+","-"};
 
 string NDM[3]={"*","/","%"};
@@ -144,12 +142,18 @@ bool checkuniary(string word)
     string idf="[a-zA-Z]|[a-zA-Z][[:alnum:]]+";
     string intconst="[+|-][[:digit:]]+|[0-9]+";
     string floatconst="[+|-][0-9]*\\.[0-9]+|[0-9]*\\.[0-9]+";
+    string charA ="(\\'[\\\\][nortb\\'\\\\\"]\\')+";
+    string charB = "(\\'(?!\\\\)(?!\")(?!\\')([[:punct:]|[:alnum:]])\\')+";
+    string charC= charA + "|" + charB;
     regex idfreg(idf);
     bool identifier = regex_match(word,idfreg);
     this->lineno=line;
 
     regex regint(intconst);
     bool isint = regex_match(word,regint);
+
+    regex regchar(charC);
+    bool ischar =regex_match(word,regchar);
 
    if(identifier)
    {
@@ -183,6 +187,13 @@ bool checkuniary(string word)
    else if (isint)
    {
      this->cp="intconst";
+     this->vp=word;
+     cout<<" CP : " << this->cp <<"  VP : " << this->vp << "  Line no:  "<<this->lineno<<endl;
+   }
+
+   else if(ischar)
+   {
+     this->cp ="Charconst";
      this->vp=word;
      cout<<" CP : " << this->cp <<"  VP : " << this->vp << "  Line no:  "<<this->lineno<<endl;
    }
