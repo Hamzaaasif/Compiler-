@@ -111,7 +111,7 @@ class WordBreak
             word+=array[arrindex];
            // cout<<array[arrindex];
             arrindex++;
-            if(array[arrindex] == '\\' && array[arrindex+1] == '\"')
+            if(array[arrindex] == '\\' )
             {
             word+=array[arrindex];
             arrindex++;
