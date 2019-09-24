@@ -27,6 +27,7 @@ class WordBreak
   {
     string intconst="[+|-][[:digit:]]+|[0-9]+";
     string isalpha = "[a-zA-Z]|[0-9]";
+    string isdigit = "[[:d:]]";
     bool match = true;
     int i=0;
     int arrindex=0;
@@ -36,8 +37,8 @@ class WordBreak
       string word="";
       i=0;
       bool check = true;
-      string covertStr(1,array[arrindex]);
-      regex regstr(isalpha);
+      //string covertStr(1,array[arrindex]);
+      // regex regstr(isalpha);
 
      
      if(array[arrindex]=='=' || array[arrindex]=='+' ||  array[arrindex]=='-' || array[arrindex]=='*' || array[arrindex]=='/' || array[arrindex]=='<' || array[arrindex]=='>' || array[arrindex]=='!' || array[arrindex]=='%')
@@ -66,6 +67,32 @@ class WordBreak
           }
 
 
+
+      top:
+      string covertfloat(1,array[arrindex]);
+      regex regfloat(isdigit);
+      match = regex_match(covertfloat,regfloat);
+      while(match)
+      {
+        check = false;
+        wordover=true;
+        word+=array[arrindex];
+        //cout<<array[arrindex];
+        arrindex++;
+         string covertfloat(1,array[arrindex]);
+        match = regex_match(covertfloat,regfloat);
+      }
+
+      if(array[arrindex]=='.' && i==0) 
+      {
+        i=1;
+        word+=array[arrindex];
+        arrindex++;
+        goto top;
+      }
+
+      string covertStr(1,array[arrindex]);
+      regex regstr(isalpha);
       match = regex_match(covertStr,regstr);
       while(match)
       {
@@ -185,7 +212,7 @@ class WordBreak
 
 
         
-        if((array[arrindex]=='+' && array[arrindex+1]=='+') || (array[arrindex]=='-' && array[arrindex+1]=='-') || (array[arrindex]=='&' && array[arrindex+1]=='&') || (array[arrindex]=='|' && array[arrindex+1]=='|')  || (array[arrindex]==':' && array[arrindex+1]==':')) 
+        if((array[arrindex]=='+' && array[arrindex+1]=='+') || (array[arrindex]=='-' && array[arrindex+1]=='-') || (array[arrindex]=='&' && array[arrindex+1]=='&') || (array[arrindex]=='|' && array[arrindex+1]=='|')  || (array[arrindex]==':' && array[arrindex+1]==':') || (array[arrindex]=='<' && array[arrindex+1]=='<') || (array[arrindex]=='>' && array[arrindex+1]=='>')) 
         {
           i++;
           wordover=true;

@@ -155,6 +155,9 @@ bool checkuniary(string word)
     regex regchar(charC);
     bool ischar =regex_match(word,regchar);
 
+    regex regfloat(floatconst);
+    bool isfloat =regex_match(word,regfloat);
+
    if(identifier)
    {
      if( checkdt( word) )
@@ -194,6 +197,13 @@ bool checkuniary(string word)
    else if(ischar)
    {
      this->cp ="Charconst";
+     this->vp=word;
+     cout<<" CP : " << this->cp <<"  VP : " << this->vp << "  Line no:  "<<this->lineno<<endl;
+   }
+
+   else if(isfloat)
+   {
+     this->cp ="Floatconst";
      this->vp=word;
      cout<<" CP : " << this->cp <<"  VP : " << this->vp << "  Line no:  "<<this->lineno<<endl;
    }
