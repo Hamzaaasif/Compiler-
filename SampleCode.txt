@@ -1,37 +1,10 @@
-class point
-{
-  private:
-  point(int a)
-  {
-    point p;
-    
-  }
-  
-  point p (int a , int b)
-  {
-    for(i=0;i<5;i++)
-    {
-      if(3)
-      {
-
-      }
-      else
-      {
-        
-      }
-    }
-  } 
-};
-
-point p (int a , int b)
-  {
-    for(i=0;i<5;i++)
-    {
-    
-    }
-  }
-  
+int a =b;
+a = a.b.fn();
+point b;
+a =c;
 void main()
 {
-  a=a.b.c.d();
+  a = a.b.fn();
+  a=a.b;
+  int a = b+x  
 }$

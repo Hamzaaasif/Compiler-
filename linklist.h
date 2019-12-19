@@ -1343,6 +1343,7 @@ public:
           // cout << "Error syntax at: " << (*curr)->cp << endl;
           return false;
         }
+        
       }
       else if (init4())
       {
@@ -1523,7 +1524,7 @@ public:
     
    // if ((*curr)->cp == "ID" || (*curr)->cp == "," || (*curr)->cp == ";" || (*curr)->cp == "=")
   
-      if ((*curr)->cp == "=")
+      if ((*curr)->cp == "AOP") //changes yhan ki hain //
       {
 
         (*curr) = (*curr)->next;
@@ -1542,7 +1543,7 @@ public:
         }
         else
         {
-          return true;
+          return false;
         }
       }
 
@@ -1644,7 +1645,7 @@ public:
         }
       }
 
-      else if( (*curr)->cp == "." || (*curr)->cp == "(" || (*curr)->cp == "uniary" || (*curr)->cp == "AOP" || (*curr)->cp == ";" || (*curr)->cp == "," )  //|| (*curr)->cp == ";"
+      else if( (*curr)->cp == "." || (*curr)->cp == "(" || (*curr)->cp == "uniary" || (*curr)->cp == "AOP" || (*curr)->cp == "," || (*curr)->cp == ";" )  //|| (*curr)->cp == ";"
       {
         return true;
       }
@@ -3003,33 +3004,32 @@ public:
 
    // if ((*curr)->cp == "[" || (*curr)->cp == "intconst" || (*curr)->cp == "(" || (*curr)->cp == "!" || (*curr)->cp == "ID"||(*curr)->cp == "ROP"||(*curr)->cp == "||"||(*curr)->cp == "&&"||(*curr)->cp == "PM"||(*curr)->cp == "MDM")
     
-      if (fn_call())
+      if (fn_call1())
       {
         return true;
       }
 
-      else if (array())
-      {
-        if (nt2())
+      // else if (array())
+       //{
+        else if (nt2())
         {
-          if ((*curr)->cp == "uniary")
-          {
-            (*curr) = (*curr)->next;
-            return true;
-          }
-
-          else
-          {
-            // cout << "Error syntax at: " << (*curr)->cp << endl;
-            return false;
-          }
+          // if ((*curr)->cp == "uniary")
+          // {
+          //   (*curr) = (*curr)->next;
+             return true;
+          // }
+          // else
+          // {
+          //   // cout << "Error syntax at: " << (*curr)->cp << endl;
+          //   return false;
+          // }
         }
-        else
-        {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
-          return false;
-        }
-      }
+        // else
+        // {
+        //   // cout << "Error syntax at: " << (*curr)->cp << endl;
+        //   return false;
+        // }
+      //}
       else if( (*curr)->cp == "," || (*curr)->cp == ")"|| (*curr)->cp == ";" ||(*curr)->cp == "}"||(*curr)->cp == "AOP"||(*curr)->cp == "]"||(*curr)->cp == ":"  ||(*curr)->cp == "||" ||(*curr)->cp == "&&" ||(*curr)->cp == "ROP" ||(*curr)->cp == "MDM" ||(*curr)->cp == "PM" )
       {
         return true;
@@ -3052,9 +3052,9 @@ public:
         if ((*curr)->cp == "ID")
         {
           (*curr) = (*curr)->next;
-          if (array())
-          {
-            if (nt2())
+          //if (array())
+          //{
+            if (XOE1())
             {
               return true;
             }
@@ -3063,12 +3063,12 @@ public:
               // cout << "Error syntax at: " << (*curr)->cp << endl;
               return false;
             }
-          }
-          else
-          {
+          //}
+          //else
+          //{
             // cout << "Error syntax at: " << (*curr)->cp << endl;
-            return false;
-          }
+           // return false;
+          //}
         }
         else
         {
