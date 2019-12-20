@@ -32,7 +32,7 @@ int main()
 
 
   //cout<<"Type: "<<table.lookupST("b",start);
-  //letter.Letter();
+  letter.Letter();
 
 
 
@@ -64,14 +64,14 @@ int main()
 // cout<<"Ret Type: "<<fntable.lookupFn("fn" , "int" , "global" , start)<<endl;
 
 
-clasDT *start = NULL;
-clasDT cdt;
-cdt.insertCDT("a" , "int" , "private" , "static" , &start);
-cdt.insertCDT("ab" , "int" , "private" , "static" , &start);
-cdt.insertCDT("a" , "float" , "private" , "NULL" , &start);//
-cdt.insertCDT("ab" , "string" , "public" , "static" , &start);
+// clasDT *start = NULL;
+// clasDT cdt;
+// cdt.insertCDT("a" , "int" , "private" , "static" , &start);
+// cdt.insertCDT("ab" , "int" , "private" , "static" , &start);
+// cdt.insertCDT("a" , "float" , "private" , "NULL" , &start);//
+// cdt.insertCDT("ab" , "string" , "public" , "static" , &start);
 
-cdt.print(start);
+// cdt.print(start);
 
 
 

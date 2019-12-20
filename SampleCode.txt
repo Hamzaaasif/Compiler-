@@ -4,6 +4,10 @@ point b;
 a =c+f;
 void main()
 {
+  for(int a;i<10;i++)
+  {
+    
+  }
   a.b.print();
   int a;
   a = a.b.fn();
