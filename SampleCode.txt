@@ -1,9 +1,11 @@
-int a =b;
+int a;
 a = a.b.fn();
 point b;
-a =c;
+a =c+f;
 void main()
 {
+  a.b.print();
+  int a;
   a = a.b.fn();
   a=a.b;
   int a = b+x  
