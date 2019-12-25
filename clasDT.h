@@ -27,14 +27,13 @@ class clasDT
     }
     else
     {
-      clasDT *curr = *start;
-      if(start == NULL)
-      {
-        cout<<"Redeclaration Error class exsists : "<<name<<"  "<<type << endl;
-        return false;
-      }
-      else
-      {
+       clasDT *curr = *start;
+       if(curr->Name == name)
+           {
+            cout<<"Redeclaration Error : "<<name<<"  "<<type<<endl;
+            return false;
+           }
+
         while (curr->next != NULL)
         {
           curr = curr->next;
@@ -51,10 +50,41 @@ class clasDT
       
     }
 
+
+string lookupCDT(string name , clasDT *start ) // type return kryga 
+{
+
+  if(start==NULL)
+    {
+      cout<<"Not decleared"<<endl;
+      return "NULL";
+    }
+    else
+    {
+      clasDT *curr=start;
+      while(curr->next!=NULL)
+      {
+        if(curr->Name == name && curr->AM !="private") //private access not allowed
+        {
+          cout<<"Name: "<<curr->Name<<"  Type: "<<curr->Type <<" AM : "<<curr->AM<<endl;
+          return curr->Type;
+        }
+        curr=curr->next;
+      }
+
+        if(curr->Name == name && curr->AM !="private")  //private access not allowed
+        {
+          cout<<"Name: "<<curr->Name<<"  Type: "<<curr->Type <<" AM : "<<curr->AM<<endl;
+          return curr->Type;
+        }
+        else
+        {
+          cout<<"Not decleared or private attribute"<<endl;
+          return "NULL";
+        }
+        
+    }
   }
-
-
-
 
 
   void print(clasDT *start)

@@ -6,13 +6,13 @@ class symbolTable
   private:
   string Name;
   string Type;
-  int scope;
+  intconst scope;
   symbolTable *next;
-  stack<int> scopeStack;
-  int stacksize = 0;
+  stack<intconst> scopeStack;
+  intconst stacksize = 0;
 
   public:
-  bool insertST(string name , string type , int scope , symbolTable **start) 
+  bool insertST(string name , string type , intconst scope , symbolTable **start) 
   {
     symbolTable *ptr = new symbolTable;
     ptr->Name = name;
@@ -53,16 +53,16 @@ class symbolTable
     
   }
 
-int createScope()
+intconst createScope()
 {
   scopeStack.push(stacksize);
   stacksize++;
   return (stacksize-1);
 }
 
-int deleteScope()
+intconst deleteScope()
 {
-  //int stacksize = scopeStack.size();
+  //intconst stacksize = scopeStack.size();
   scopeStack.pop();
   if(!scopeStack.empty())
   {
@@ -88,7 +88,7 @@ string lookupST(string name , symbolTable *start)
   {
     string retType="NULL";
     bool f = true;
-    stack <int> s = scopeStack;
+    stack <intconst> s = scopeStack;
     symbolTable *curr = start;
       while(curr->next!=NULL)
       {
@@ -142,7 +142,9 @@ string lookupST(string name , symbolTable *start)
 
 
 
-void print(symbolTable *start)
+
+
+void printconst(symbolTable *start)
   {
     if(start==NULL)
     {

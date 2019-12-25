@@ -1,6 +1,8 @@
 #include <iostream>
 using namespace std;
 #include "string"
+#include"functionTable.h"
+#include"DataTable.h"
 //#include"Token.h"
 
 class linklist
@@ -11,6 +13,10 @@ public:
   int lineno;
   linklist *next;
   linklist **curr;
+
+  DataTable *DTstart =NULL;
+  functionTable *FNstart= NULL;
+
 
 
   void insert(string cp, string vp, int lineno, linklist **start)
@@ -3242,6 +3248,69 @@ public:
     }
   }
 
+
+
+
+
+
+string compatibilityCheck(string leftType , string rightType ,string paralist ,string Operator) //paralist for fn
+{
+  if(leftType == "intconst" && rightType == "intconst" && (Operator == "+" || Operator == "-" || Operator == "*" || Operator == "/" || Operator == "%" || Operator == "<" || Operator == ">" || Operator == "<=" || Operator == ">=" || Operator == "!=" || Operator == "==" || Operator == "=" ||  Operator == "+=" || Operator == "-=" || Operator == "*=" || Operator == "/=" || Operator == "%=" ))
+  {
+    return "intconst";
+  }
+  else if( ((leftType == "intconst" && rightType == "floatconst")  || (leftType == "floatconst" && rightType == "intconst") || (leftType == "floatconst" && rightType == "floatconst") )  &&  ( Operator == "+" || Operator == "-" || Operator == "*" || Operator == "/" || Operator == "%" || Operator == "<" || Operator == ">" || Operator == "<=" || Operator == ">=" || Operator == "!=" || Operator == "==" || Operator == "=" ||  Operator == "+=" || Operator == "-=" || Operator == "*=" || Operator == "/=" || Operator == "%=" ) )
+  {
+    return "floatconst";
+  }
+  else if( leftType == "stringconst" && rightType == "stringconst" && (Operator == "+" || Operator=="+=" || Operator=="="  || Operator == "<" || Operator == ">" || Operator == "<=" || Operator == ">=" || Operator == "!=" || Operator == "==" ) )
+  {
+    return "stringconst";
+  }
+  else if( leftType == "boolconst" && rightType == "boolconst"  && ( Operator=="="  || Operator == "<" || Operator == ">" || Operator == "<=" || Operator == ">=" || Operator == "!=" || Operator == "=="  )  )
+  {
+    return "boolconst";
+  }
+  else if( leftType == "Charconst" && rightType == "Charconst"  && ( Operator=="="  || Operator == "<" || Operator == ">" || Operator == "<=" || Operator == ">=" || Operator == "!=" || Operator == "=="  )  )
+  {
+    return "Charconst";
+  }
+  else if(Operator == ".")
+  {
+    DataTable DTobj,DTtemp;
+    clasDT CDTobj,CDTtemp;
+    DTtemp = DTobj.retAddress(leftType , DTstart);
+    CDTtemp = CDTobj.lookupCDT(rightType , DTtemp->Ref);
+    functionTable fntable;
+    string fntype = fntable.lookupFn(rightType , paralist , leftType ,FNstart);
+    if(CDTtemp != "NULL") //for atribute a.b
+    {
+      return CDTtemp;
+    }
+    else if(fntype != "NULL") //for fucntion a.b()
+    {
+      return fntype;
+    }
+    else if(DTtemp->Parent != NULL) //for attributes in parent
+    {
+      string temp = DTtemp->Parent->Name;
+      return compatibilityCheck(temp , rightType ,".");
+    }
+    else
+    {
+      cout<<"Not compatible (at chk comp fn)"<<endl;
+      return "NULL";
+    }
+    
+
+  }
+  else
+  {
+    cout<<"Not compatible (at chk comp fn)"<<endl;
+      return "NULL";
+  }
+  
+}
 
 
 

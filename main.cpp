@@ -1,9 +1,6 @@
 #include<iostream>
 #include"WordBreak.h"
-//#include"DataTable.h"
-#include"functionTable.h"
-//#include "clasDT.h"
-#include "clasDT.h"
+#include"DataTable.h"
 
 using namespace std;
 
@@ -32,20 +29,35 @@ int main()
 
 
   //cout<<"Type: "<<table.lookupST("b",start);
-  letter.Letter();
+ // letter.Letter();
 
 
+  cout<<"     Data Table    " <<endl<<endl;
+  DataTable *start =NULL;
+  DataTable DT;
+  //DT.insertDT("point" , "class" , NULL , NULL  , &start);
+  DT.insertDT("rect" , "class" , NULL , NULL  , &start);
+  DT.insertDT("hamza" , "class" , NULL , NULL  , &start);
+  DT.print(start);
 
-  // DataTable *start =NULL;
-  // DataTable DT;
-  // DT.insertDT("point" , "class" , NULL , NULL  , &start);
-  // DT.insertDT("rect" , "class" , NULL , NULL  , &start);
-  // DT.insertDT("hamza" , "class" , NULL , NULL  , &start);
-  // DT.print(start);
+  //cout<<DT.retAddress("point", start)<<endl;
+  cout<<DT.retAddress("hamza", start)<<endl;
+  cout<<endl;
 
-  // cout<<DT.lookupDT("point", start)<<endl;
-  // cout<<DT.lookupDT("jase", start)<<endl;
-  // cout<<endl;
+
+cout<<"    Class Data Table    " <<endl<<endl;
+
+clasDT *CDTstart = NULL;
+clasDT cdt;
+cdt.insertCDT("a" , "int" , "private" , "static" , &CDTstart);
+cdt.insertCDT("ab" , "int" , "private" , "static" , &CDTstart);
+cdt.insertCDT("ac" , "float" , "public" , "NULL" , &CDTstart);
+cdt.insertCDT("abb" , "float" , "public" , "static" , &CDTstart);
+DT.insertDT("point" , "class" , NULL , CDTstart  , &start);
+
+DataTable* tmp = DT.retAddress("point", start);
+cout<<endl<< "Look up in CDT at main "<<cdt.lookupCDT("abb",tmp->Ref)<<endl;
+cdt.print(tmp->Ref);
 
 
 // functionTable *start= NULL;
@@ -62,16 +74,6 @@ int main()
 
 // fntable.lookupFn("fkn" , "int,float" , "A" , start);
 // cout<<"Ret Type: "<<fntable.lookupFn("fn" , "int" , "global" , start)<<endl;
-
-
-// clasDT *start = NULL;
-// clasDT cdt;
-// cdt.insertCDT("a" , "int" , "private" , "static" , &start);
-// cdt.insertCDT("ab" , "int" , "private" , "static" , &start);
-// cdt.insertCDT("a" , "float" , "private" , "NULL" , &start);//
-// cdt.insertCDT("ab" , "string" , "public" , "static" , &start);
-
-// cdt.print(start);
 
 
 

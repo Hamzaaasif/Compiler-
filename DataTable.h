@@ -1,5 +1,5 @@
 #include<iostream>
-#include"classDT.h"
+#include"clasDT.h"
 using namespace std;
 class DataTable
 {
@@ -58,44 +58,43 @@ class DataTable
  }
       
 
-
-// string lookupDT(string name , DataTable *start)
+DataTable* retAddress(string name , DataTable *start) //return curr address
  
-//   {
+  {
 
-//   if(start == NULL)
-//   {
-//     cout<<"Not declared"<<endl;
-//     return "NULL";
-//   }
-//   else
-//   {
+  if(start == NULL)
+  {
+    cout<<"Not declared"<<endl;
+    return NULL;
+  }
+  else
+  {
+    
+    DataTable *curr = start;
+    while(curr->next != NULL)
+    {
+      if(curr->Name == name)
+      {
+        cout<<"Name : " <<curr->Name<<" Type: "<<curr->Type<<" (at DT) "<<endl;
+        return curr;
+      }
+      curr = curr->next;
+    }
 
-
-//     DataTable *curr = start;
-//     while(curr->next != NULL)
-//     {
-//       if(curr->Name == name)
-//       {
-//         cout<<"Type: "<<curr->Type<<endl;
-//         return curr->Type;
-//       }
-//       curr = curr->next;
-//     }
-
-//     if(curr->Name == name)
-//       {
-//         cout<<"Type: "<<curr->Type<<endl;
-//         return curr->Type;
-//       }
-//       else
-//       {
-//         return "NULL";
-//       }
+    if(curr->Name == name)
+      {
+        cout<<"Name : " <<curr->Name<<" Type: "<<curr->Type<<" (at DT) "<<endl;
+        return curr;
+      }
+      else
+      {
+        cout<<"Undecleared"<<endl;
+        return NULL;
+      }
       
-//   }
+  }
   
-// }
+}
 
 
 
