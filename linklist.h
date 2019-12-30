@@ -3,6 +3,7 @@ using namespace std;
 #include "string"
 #include"functionTable.h"
 #include"DataTable.h"
+#include"symbolTable.h"
 //#include"Token.h"
 
 class linklist
@@ -14,10 +15,27 @@ public:
   linklist *next;
   linklist **curr;
 
-  DataTable *DTstart =NULL;
+bool globalflag = false; 
+
+  //fn table
   functionTable *FNstart= NULL;
+  functionTable Fnobj;
+  string globalRetType="";
+  string globalparalist ="";
+
+ //Symbol Table 
+  symbolTable *STstart =NULL;
+  symbolTable STobj;
+  int globalcurrScope = -1;
+  string globalname="";
+  string globaltype ="";
 
 
+  //Data Table
+  DataTable *DTstart =NULL;
+  DataTable DTobj;
+  DataTable *parent =NULL;
+  string globalclassname = "";
 
   void insert(string cp, string vp, int lineno, linklist **start)
   {
@@ -48,6 +66,7 @@ public:
   {
 
     curr = start;
+    globalcurrScope = STobj.createScope(); //global scope declare
     
     if ((*curr)->cp == "class" || (*curr)->cp == "DT" || (*curr)->cp == "ID" || (*curr)->cp == "static" || (*curr)->cp == "void" )
     {
@@ -57,22 +76,40 @@ public:
         {
           if ((*curr)->cp == "main")
           {
+            globalname = (*curr)->vp; // Name
+            cout<<"Function Name: "<< (*curr)->vp<<endl;
+
             (*curr) = (*curr)->next;
             if ((*curr)->cp == "(")
             {
               (*curr) = (*curr)->next;
               if (NV())
               {
+                cout<<"Main insertion: "<<Fnobj.insertfn(globalname , globalRetType , globalparalist , "Global" , &FNstart)<<endl;
+
                 if ((*curr)->cp == "{")
                 {
+                  globalcurrScope = STobj.createScope(); //scope declared
+
                   (*curr) = (*curr)->next;
                   if (MST())
                   {
                     if ((*curr)->cp == "}")
                     {
+                      globalcurrScope = STobj.deleteScope(); // main scope end
+
                       (*curr) = (*curr)->next;
                       if ((*curr)->cp == "$")
                       {
+                        globalcurrScope = STobj.deleteScope(); //Global  scope end
+                        cout<<endl<<endl<<"Symbol Table: "<<endl;
+                        STobj.printST(STstart);
+                        cout<<endl<<endl;
+
+                        cout<<endl<<endl<<"Function Table: "<<endl;
+                        Fnobj.printFN(FNstart);
+                        cout<<endl<<endl;
+
                         cout << "File end" << endl;
                         return true;
                       }
@@ -104,13 +141,14 @@ public:
     
     if ((*curr)->cp == "void" )
     {
-     // cout << "Curr value at top " << (*curr)->cp << endl;
+      globalRetType = (*curr)->vp;
+      cout<<"Return Type: "<<(*curr)->vp<<endl;
+
       (*curr) = (*curr)->next;
       return true;
     }
     else
     {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
       return false;
     }
   }
@@ -123,12 +161,25 @@ public:
 
       if ((*curr)->cp == "void") //first set
       {
+        globalparalist = (*curr)->vp; //parameter List
+        cout<<"Function Para List: "<<(*curr)->vp<<endl;
+
         (*curr) = (*curr)->next;
-        return true;
+        if((*curr)->cp == ")")
+        {
+          (*curr) = (*curr)->next;
+          return true;
+        }
+        else
+        {
+          return false;
+        }
+        
       }
 
       else if ((*curr)->cp == ")") //follow set
       {
+        globalparalist = "";
         (*curr) = (*curr)->next;
         return true;
       }
@@ -160,6 +211,9 @@ public:
 
     else if ((*curr)->cp == "ID")
       {
+        globaltype = (*curr)->vp; //name in case of ass_st and type in case of obj|fn dec i.e ID
+        cout<<endl<<"Type at defs : "<< (*curr)->vp<<endl;
+
         (*curr) = (*curr)->next;
         if (defs1())
         {
@@ -172,9 +226,15 @@ public:
     
       else if ((*curr)->cp == "DT")
       {
+        globaltype = (*curr)->vp; //type 
+        cout<<endl<<"Type at defs : "<< (*curr)->vp<<endl;
+
          (*curr) = (*curr)->next;
          if ((*curr)->cp == "ID")
           {
+            globalname = (*curr)->vp; //Name 
+            cout<<endl<<"Name at defs : "<< (*curr)->vp<<endl;
+
             (*curr) = (*curr)->next;
             if (defs2())
              {
@@ -622,6 +682,9 @@ public:
 
       else if ((*curr)->cp == "ID")
       {
+        globalname = (*curr)->vp;
+        cout<<"Name at defs1: "<<(*curr)->vp<<endl;
+
         (*curr) = (*curr)->next;
         if (X())
         {
@@ -768,17 +831,16 @@ public:
 
   bool fun_dec()
   {
-    
-    //if ((*curr)->cp == "ID" || (*curr)->cp == "DT" || (*curr)->cp == "void" || (*curr)->cp == ")")
-    //{
-
+    string temptype = globaltype;
+    string tempname = globalname;
       if (para())
       {
         if ((*curr)->cp == ")")
         {
           (*curr) = (*curr)->next;
-          // if (inherit())
-          // {
+
+           cout<<"Function insertion: "<<Fnobj.insertfn(tempname , temptype , globalparalist , "Global" , &FNstart)<<endl; //class ky lye set krna hy abi
+ 
             if ((*curr)->cp == "{")
             {
               (*curr) = (*curr)->next;
@@ -787,6 +849,8 @@ public:
                 if ((*curr)->cp == "}")
                 {
                   (*curr) = (*curr)->next;
+                  globalcurrScope = STobj.deleteScope(); //fn scope ends
+
                   return true;
                 }
                 else
@@ -806,7 +870,6 @@ public:
               // cout << "Error syntax at: " << (*curr)->cp << endl;
               return false;
             }
-          //}
           // else
           // {
             //cout << "Error syntax at: " << (*curr)->cp << endl;
@@ -861,18 +924,32 @@ public:
   }
 
 
-  bool def()
+  bool def(bool flag)
   {
-    
-    // if ((*curr)->cp == "ID" || (*curr)->cp == "DT")
-    // {
 
       if ((*curr)->cp == "ID")
       {
-        (*curr) = (*curr)->next;
-        if ((*curr)->cp == "ID")
+       
+        if ((*curr)->next->cp == "ID")
         {
+
+          if(flag)
+          {
+            globalcurrScope = STobj.createScope();
+            globalparalist="";
+            flag=false;
+          }
+
+          globaltype = (*curr)->vp;
+          globalparalist += (*curr)->vp + "," ;
+          cout<<"Para List: "<<globalparalist<<endl;
+
           (*curr) = (*curr)->next;
+
+          globalname = (*curr)->vp;
+          (*curr) = (*curr)->next;
+
+          STobj.insertST(globalname , globaltype , globalcurrScope , &STstart);
           return true;
         }
         else
@@ -881,14 +958,32 @@ public:
           return false;
         }
       }
+
       else if ((*curr)->cp == "DT")
       {
-        (*curr) = (*curr)->next;
-        if ((*curr)->cp == "ID")
+       
+        if ((*curr)->next->cp == "ID")
         {
+
+          if(flag)
+          {
+            globalcurrScope = STobj.createScope();
+            globalparalist="";
+            flag=false;
+          }
+
+          globaltype = (*curr)->vp;
+          globalparalist += (*curr)->vp + "," ;
+          cout<<"Para List: "<<globalparalist<<endl;
+
           (*curr) = (*curr)->next;
+          globalname = (*curr)->vp;
+
+          (*curr) = (*curr)->next;
+          STobj.insertST(globalname , globaltype , globalcurrScope , &STstart);
           return true;
         }
+
         else
         {
           // cout << "Error syntax at: " << (*curr)->cp << endl;
@@ -935,10 +1030,9 @@ public:
 
   bool para()
   {
-    
-  //  if ((*curr)->cp == "ID" || (*curr)->cp == "DT" || (*curr)->cp == "void" || (*curr)->cp == ")")
+    bool flag = true;
 
-      if (def())
+      if (def(flag))
       {
         if (E())
         {
@@ -953,12 +1047,16 @@ public:
 
       else if ((*curr)->cp == "void")
       {
+        globalparalist = "void";
+        globalcurrScope = STobj.createScope(); //scope starts
         (*curr) = (*curr)->next;
         return true;
       }
 
       else if((*curr)->cp == ")")
       {
+        globalcurrScope = STobj.createScope();
+        globalparalist = "void";
         return true;
       }
       else
@@ -976,7 +1074,7 @@ public:
       if ((*curr)->cp == ",")
       {
         (*curr) = (*curr)->next;
-        if (def())
+        if (def( false ))
         {
           if (E())
           {
@@ -1076,6 +1174,8 @@ public:
 
       else if ((*curr)->cp == "ID")
       {
+        globaltype = (*curr)->vp; //Type
+
         (*curr) = (*curr)->next;
         if (SST1())
         {
@@ -1090,9 +1190,15 @@ public:
 
       else if ((*curr)->cp == "DT")
       {
+        globaltype = (*curr)->vp; //Type
+        cout<<"Type at SST: "<<(*curr)->vp<<endl;
+
         (*curr) = (*curr)->next;
         if ((*curr)->cp == "ID")
         {
+          globalname = (*curr)->vp; //Name
+          cout<<"Name at SST: "<< (*curr)->vp<<endl;
+
           (*curr) = (*curr)->next;
           if (SST2())
           {
@@ -1444,15 +1550,24 @@ public:
 
   bool list()
   {
-    
-   // if ((*curr)->cp == "," || (*curr)->cp == ";")
 
       if ((*curr)->cp == ",")
       {
+
+        cout<<"Insertiing in symbol Table : "<<STobj.insertST(globalname , globaltype , globalcurrScope , &STstart)<<endl; //inserting in symbol table
+
         (*curr) = (*curr)->next;
         if ((*curr)->cp == "ID")
         {
+          globalname = (*curr)->vp;
+          cout<<"Name at List after ,: "<< (*curr)->vp<<endl; 
+
           (*curr) = (*curr)->next;
+          if((*curr)->cp != ";")
+          {
+            cout<<"Insertiing in symbol Table : "<<STobj.insertST(globalname , globaltype , globalcurrScope , &STstart)<<endl; //inserting in symbol table
+          }
+
           if (init3())
           {
             if (list())
@@ -1480,6 +1595,8 @@ public:
 
       else if ((*curr)->cp == ";")
       {
+        cout<<"Insertiing in symbol Table : "<<STobj.insertST(globalname , globaltype , globalcurrScope , &STstart)<<endl; //inserting in symbol table
+
         (*curr) = (*curr)->next;
         return true;
       }
@@ -1573,9 +1690,19 @@ public:
 
       if ((*curr)->cp == ",")
       {
+        cout<<"Inserting in symbol Table : "<<STobj.insertST(globalname , globaltype , globalcurrScope , &STstart)<<endl; //inserting in symbol table
+
         (*curr) = (*curr)->next;
         if ((*curr)->cp == "ID")
         {
+          globalname = (*curr)->vp;
+          cout<<"Name at List after ,: "<< (*curr)->vp<<endl;
+
+          if((*curr)->cp != ";")
+          {
+            cout<<"Inserting in symbol Table : "<<STobj.insertST(globalname , globaltype , globalcurrScope , &STstart)<<endl; //inserting in symbol table
+          }
+
           (*curr) = (*curr)->next;
           if (array())
           {
@@ -1612,6 +1739,7 @@ public:
       
       else if ((*curr)->cp == ";")
       {
+        cout<<"Inserting in symbol Table : "<<STobj.insertST(globalname , globaltype , globalcurrScope , &STstart)<<endl; //inserting in symbol table
         (*curr) = (*curr)->next;
         return true;
       }
@@ -1778,6 +1906,7 @@ public:
           return false;
         }
       }
+
       else
       {
         // cout << "Error syntax at: " << (*curr)->cp << endl;
@@ -1960,6 +2089,8 @@ public:
 
       else if ((*curr)->cp == "ID")
       {
+        globalname = (*curr)->vp; //Name
+
         (*curr) = (*curr)->next;
         if (xxx())
         {
@@ -3253,7 +3384,7 @@ public:
 
 
 
-string compatibilityCheck(string leftType , string rightType ,string paralist ,string Operator) //paralist for fn
+/*string compatibilityCheck(string leftType , string rightType ,string paralist ,string Operator) //paralist for fn
 {
   if(leftType == "intconst" && rightType == "intconst" && (Operator == "+" || Operator == "-" || Operator == "*" || Operator == "/" || Operator == "%" || Operator == "<" || Operator == ">" || Operator == "<=" || Operator == ">=" || Operator == "!=" || Operator == "==" || Operator == "=" ||  Operator == "+=" || Operator == "-=" || Operator == "*=" || Operator == "/=" || Operator == "%=" ))
   {
@@ -3280,7 +3411,7 @@ string compatibilityCheck(string leftType , string rightType ,string paralist ,s
     DataTable DTobj,DTtemp;
     clasDT CDTobj,CDTtemp;
     DTtemp = DTobj.retAddress(leftType , DTstart);
-    CDTtemp = CDTobj.lookupCDT(rightType , DTtemp->Ref);
+    CDTtemp = CDTobj.lookupCDT(rightType , DTtemp.Ref);
     functionTable fntable;
     string fntype = fntable.lookupFn(rightType , paralist , leftType ,FNstart);
     if(CDTtemp != "NULL") //for atribute a.b
@@ -3310,7 +3441,7 @@ string compatibilityCheck(string leftType , string rightType ,string paralist ,s
       return "NULL";
   }
   
-}
+}*/
 
 
 

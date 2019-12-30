@@ -32,7 +32,7 @@ class functionTable
         
         if(curr->Name == name && curr->ParaList == paralist && curr->ClassName == classname )
         {
-          cout<<"Redeclaration error : "<<name<<"  "<<retType << " "<< paralist <<endl;
+          cout<<"Redeclaration error Function already decleared: "<<name<<"  "<<retType << " "<< paralist <<endl;
           return false;
         }
         else
@@ -44,12 +44,13 @@ class functionTable
 
             if(curr->Name == name && curr->ParaList == paralist && curr->ClassName == classname)
               {
-              cout<<"Redeclaration error : "<<name<<"  "<<retType << " "<< paralist <<endl;
+              cout<<"Redeclaration error Function already decleared : "<<"Name: "<<name<<"  "<<"Return Type: "<<retType << " Para List: "<< paralist <<endl;
               return false;
               }
           }
 
           curr->next=ptr;
+          cout<<"Function Inserted !! "<<endl;
           return true;
 
         }
@@ -94,26 +95,26 @@ string lookupFn(string name, string paralist , string classname , functionTable 
 
 
 
-void print(functionTable *start)
+void printFN(functionTable *start)
   {
     if(start==NULL)
     {
-      cout<<"List is empty"<<endl;
+      cout<<"Function Not decleared !!"<<endl;
     }
     else
     {
       functionTable *curr=start;
       while(curr->next!=NULL)
       {
-        cout<<curr->Name<<"   ";
-        cout<<curr->RetType<<"   ";
-        cout<<curr->ParaList<<"   ";
-        cout<<curr->ClassName<<"   "<<endl;
+        cout<<"Name: "<<curr->Name<<"       ";
+        cout<<"RetType: "<<curr->RetType<<"     ";
+        cout<<"PL: "<<curr->ParaList<<"     ";
+        cout<<"className: "<<curr->ClassName<<"   "<<endl;
         curr=curr->next;
       }
-        cout<<curr->Name<<"   ";
-        cout<<curr->RetType<<"   ";
-        cout<<curr->ParaList<<"   ";
+        cout<<"Name: "<<curr->Name<<"    Ret Type: ";
+        cout<<curr->RetType<<"   PL: ";
+        cout<<curr->ParaList<<"   ClassName: ";
         cout<<curr->ClassName<<"   "<<endl;
     }
   }

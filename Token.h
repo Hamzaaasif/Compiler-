@@ -2,7 +2,7 @@
 #include <regex>
 #include "linklist.h"
 using namespace std;
-string DT[5] = {"int", "float", "char", "string", "bool"};
+string DT[6] = {"int", "float", "char", "string", "bool" , "vacant"};
 
 string keyword[22] = {"for", "while", "if", "else", "switch", "case", "break", "return", "void", "main", "default", "null", "class", "public", "private", "protected", "this", "continue", "break", "new", "operator", "static"};
 
@@ -39,7 +39,7 @@ public:
   {
     int i;
     bool check = false;
-    for (i = 0; i < 5; i++)
+    for (i = 0; i < 6; i++)
     {
       if (word == DT[i])
       {
@@ -377,8 +377,9 @@ public:
        //syntaxAnalyzer syntax;
 
        //syntax.Analyzer(&start);
-       cout<<"Tokens : "<<endl<<endl;
-       list.print(&start);
+      //  cout<<"Tokens : "<<endl<<endl; for printing tokens
+      //  list.print(&start);
+
       // cout<<list.start(&start);
       cout<<endl<<endl<<"Syntax Analyzer :"<<endl<<endl;
        bool check = true;

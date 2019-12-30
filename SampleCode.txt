@@ -1,16 +1,19 @@
-int a;
-a = a.b.fn();
-point b;
-a =c+f;
+vacant sum(int a , point a)
+{
+  int checkl;
+  bool flag;
+}
+static int sum(int a , point b)
+{
+  a = a+bv;
+}
+bool sum(point b)
+{
+  a = a+bv;
+}
+
 void main()
 {
-  for(int a;i<10;i++)
-  {
-    
-  }
-  a.b.print();
-  int a;
-  a = a.b.fn();
-  a=a.b;
-  int a = b+x  
+  float point;
+  int name,type;
 }$

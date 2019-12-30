@@ -6,13 +6,13 @@ class symbolTable
   private:
   string Name;
   string Type;
-  intconst scope;
+  int scope;
   symbolTable *next;
-  stack<intconst> scopeStack;
-  intconst stacksize = 0;
+  stack<int> scopeStack;
+  int stacksize = 0;
 
   public:
-  bool insertST(string name , string type , intconst scope , symbolTable **start) 
+  bool insertST(string name , string type , int scope , symbolTable **start) 
   {
     symbolTable *ptr = new symbolTable;
     ptr->Name = name;
@@ -29,7 +29,7 @@ class symbolTable
       symbolTable *curr = *start;
       if(curr->Name == name  && curr->scope == scope)
       {
-        cout<<"Redeclaration error in start: "<<name<<"  "<<type << endl;
+        cout<<"Redeclaration error: "<<name<<"  "<<type << endl;
         return false;
       }
       else
@@ -40,12 +40,13 @@ class symbolTable
           curr = curr->next;
           if(curr->Name == name  && curr->scope == scope)
            {
-            cout<<"Redeclaration error after start: "<<name<<"  "<<type<<endl;
+            cout<<"Redeclaration error : "<<name<<"  "<<type<<endl;
             return false;
            }
         }
 
         curr->next=ptr;
+        cout<<"Inserted in Symbol Table"<<endl;
         return true;
       }
       
@@ -53,14 +54,14 @@ class symbolTable
     
   }
 
-intconst createScope()
+int createScope()
 {
   scopeStack.push(stacksize);
   stacksize++;
   return (stacksize-1);
 }
 
-intconst deleteScope()
+int deleteScope()
 {
   //intconst stacksize = scopeStack.size();
   scopeStack.pop();
@@ -88,7 +89,7 @@ string lookupST(string name , symbolTable *start)
   {
     string retType="NULL";
     bool f = true;
-    stack <intconst> s = scopeStack;
+    stack <int> s = scopeStack;
     symbolTable *curr = start;
       while(curr->next!=NULL)
       {
@@ -144,7 +145,7 @@ string lookupST(string name , symbolTable *start)
 
 
 
-void printconst(symbolTable *start)
+void printST(symbolTable *start)
   {
     if(start==NULL)
     {
@@ -155,14 +156,14 @@ void printconst(symbolTable *start)
       symbolTable *curr=start;
       while(curr->next!=NULL)
       {
-        cout<<curr->Name<<"   ";
-        cout<<curr->Type<<"   ";
-        cout<<curr->scope<<"   "<<endl;
+        cout<<"Name: "<<curr->Name<<"     ";
+        cout<<"Type: "<<curr->Type<<"     ";
+        cout<<"Scope: "<<curr->scope<<"     "<<endl;
         curr=curr->next;
       }
-        cout<<curr->Name<<"   ";
-        cout<<curr->Type<<"   ";
-        cout<<curr->scope<<"   "<<endl;
+        cout<<"Name: "<<curr->Name<<"     ";
+        cout<<"Type: "<<curr->Type<<"     ";
+        cout<<"Scope: "<<curr->scope<<"     "<<endl;
     }
   }
 };
