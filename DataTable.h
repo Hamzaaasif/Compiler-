@@ -9,6 +9,7 @@ class DataTable
   DataTable *Parent;
   DataTable *next;
   clasDT *Ref;
+  clasDT cdtobj;
 
   bool insertDT(string name , string type , DataTable *parent , clasDT *ref , DataTable **start)
   {
@@ -112,14 +113,19 @@ void print(DataTable *start)
       {
         cout<<curr->Name<<"   ";
         cout<<curr->Type<<"   ";
-        cout<<curr->Parent<<"   ";
-        cout<<curr->Ref<<"   "<<endl;
+        cout<<curr->Parent<<"   "<<endl<<endl;
+
+        cout<<"Class Data Table: "<<endl;
+        cdtobj.print(curr->Ref);
+        cout<<endl;
         curr=curr->next;
       }
         cout<<curr->Name<<"   ";
         cout<<curr->Type<<"   ";
-        cout<<curr->Parent<<"   ";
-        cout<<curr->Ref<<"   "<<endl;
+        cout<<curr->Parent<<"   "<<endl<<endl;
+        cout<<"Class Data Table: "<<endl;
+        cdtobj.print(curr->Ref);
+        cout<<endl;
     }
   }
 

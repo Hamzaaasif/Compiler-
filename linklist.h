@@ -35,7 +35,11 @@ bool globalflag = false;
   DataTable *DTstart =NULL;
   DataTable DTobj;
   DataTable *parent =NULL;
-  string globalclassname = "";
+  string globalclassname = "Global";
+  clasDT *CDTRef = NULL;
+  clasDT classDTobj;
+  string globalTM ="";
+  string globalAM = "";
 
   void insert(string cp, string vp, int lineno, linklist **start)
   {
@@ -108,6 +112,10 @@ bool globalflag = false;
 
                         cout<<endl<<endl<<"Function Table: "<<endl;
                         Fnobj.printFN(FNstart);
+                        cout<<endl<<endl;
+
+                        cout<<endl<<endl<<"Data Table: "<<endl;
+                        DTobj.print(DTstart);
                         cout<<endl<<endl;
 
                         cout << "File end" << endl;
@@ -299,14 +307,21 @@ bool globalflag = false;
     
     if ((*curr)->cp == "class")
     {
+      globaltype = (*curr)->vp; //type ie class 
+
       (*curr) = (*curr)->next;
       if ((*curr)->cp == "ID")
       {
+        globalclassname = (*curr)->vp; //class name saved
+
         (*curr) = (*curr)->next;
         if (check_inh())
         {
           if ((*curr)->cp == "{")
           {
+            CDTRef = NULL;
+            DTobj.insertDT(globalclassname , globaltype , parent , CDTRef , &DTstart);
+
             (*curr) = (*curr)->next;
             if (class_body())
             {
@@ -315,6 +330,10 @@ bool globalflag = false;
                 (*curr) = (*curr)->next;
                 if ((*curr)->cp == ";")
                 {
+                  DataTable *DTtemp = DTobj.retAddress(globalclassname , DTstart);
+                  DTtemp->Ref = CDTRef;
+                  CDTRef = NULL;
+                  globalclassname = "Global";
                   (*curr) = (*curr)->next;
                   return true;
                 }
@@ -365,11 +384,10 @@ bool globalflag = false;
   bool class_body()
   {
     
-   // if ((*curr)->cp == "ID" ) //|| (*curr)->cp == "DT" || (*curr)->cp == "AM" || (*curr)->cp == "virtual" || (*curr)->cp == "intconst" || (*curr)->cp == "static" || (*curr)->cp == "}"||(*curr)->cp == "public"||(*curr)->cp == "private"
-   // {
-
       if ((*curr)->cp == "ID")
       {
+        globaltype = (*curr)->vp; //name
+
         (*curr) = (*curr)->next;
         if (X1())
         {
@@ -392,10 +410,12 @@ bool globalflag = false;
 
       else if ((*curr)->cp == "DT")
       {
+        globaltype = (*curr)->vp; 
         (*curr) = (*curr)->next;
 
         if ((*curr)->cp == "ID")
         {
+          globalname = (*curr)->vp;
           (*curr) = (*curr)->next;
           if (X2())
           {
@@ -512,12 +532,14 @@ bool globalflag = false;
     //if ((*curr)->cp == "(" || (*curr)->cp == "ID")
       if ((*curr)->cp == "ID") 
       {
+        globalname = (*curr)->vp; //name
+
         (*curr) = (*curr)->next;
         if (X3())
         {
           return true;
         }
-        else
+        else  
         {
           // cout << "Error syntax at: " << (*curr)->cp << endl;
           return false;
@@ -608,8 +630,7 @@ bool globalflag = false;
 
   bool X2()
   {
-    
-  //  if ((*curr)->cp == "[" || (*curr)->cp == "(" || (*curr)->cp == "AOP" || (*curr)->cp == "," || (*curr)//->cp == ";")
+    globalflag =true;
       if ((*curr)->cp == "(")
       {
         (*curr) = (*curr)->next;
@@ -640,10 +661,9 @@ bool globalflag = false;
   bool X3()
   {
     
-   // if ((*curr)->cp == "[" || (*curr)->cp == "(" || (*curr)->cp == "ID" || (*curr)->cp == "," || (*curr)///->cp == ";")
-
       if ((*curr)->cp == "(")
       {
+        
         (*curr) = (*curr)->next;
         if (fun_dec())
         {
@@ -839,7 +859,7 @@ bool globalflag = false;
         {
           (*curr) = (*curr)->next;
 
-           cout<<"Function insertion: "<<Fnobj.insertfn(tempname , temptype , globalparalist , "Global" , &FNstart)<<endl; //class ky lye set krna hy abi
+           cout<<"Function insertion: "<<Fnobj.insertfn(tempname , temptype , globalparalist , globalclassname , &FNstart)<<endl; //class ky lye set krna hy abi
  
             if ((*curr)->cp == "{")
             {
@@ -1554,7 +1574,15 @@ bool globalflag = false;
       if ((*curr)->cp == ",")
       {
 
-        cout<<"Insertiing in symbol Table : "<<STobj.insertST(globalname , globaltype , globalcurrScope , &STstart)<<endl; //inserting in symbol table
+        if(!globalflag)
+        {
+          cout<<"Inserting in symbol Table : "<<STobj.insertST(globalname , globaltype , globalcurrScope , &STstart)<<endl; //inserting in symbol table
+        }
+        else
+        {
+          classDTobj.insertCDT(globalname , globaltype , globalAM , globalTM , &CDTRef);
+          globalflag = false;
+        }
 
         (*curr) = (*curr)->next;
         if ((*curr)->cp == "ID")
@@ -1565,7 +1593,15 @@ bool globalflag = false;
           (*curr) = (*curr)->next;
           if((*curr)->cp != ";")
           {
-            cout<<"Insertiing in symbol Table : "<<STobj.insertST(globalname , globaltype , globalcurrScope , &STstart)<<endl; //inserting in symbol table
+            if(!globalflag)
+             {
+               cout<<"Inserting in symbol Table : "<<STobj.insertST(globalname , globaltype , globalcurrScope , &STstart)<<endl; //inserting in symbol table
+            }
+            else
+            {
+              classDTobj.insertCDT(globalname , globaltype , globalAM , globalTM , &CDTRef);
+              globalflag = false;
+            }
           }
 
           if (init3())
@@ -1595,7 +1631,15 @@ bool globalflag = false;
 
       else if ((*curr)->cp == ";")
       {
-        cout<<"Insertiing in symbol Table : "<<STobj.insertST(globalname , globaltype , globalcurrScope , &STstart)<<endl; //inserting in symbol table
+        if(!globalflag)
+        {
+          cout<<"Inserting in symbol Table : "<<STobj.insertST(globalname , globaltype , globalcurrScope , &STstart)<<endl; //inserting in symbol table
+        }
+        else
+        {
+          classDTobj.insertCDT(globalname , globaltype , globalAM , globalTM , &CDTRef);
+          globalflag = false;
+        }
 
         (*curr) = (*curr)->next;
         return true;
@@ -1612,12 +1656,12 @@ bool globalflag = false;
   bool obj_dec()
   {
     
-   // if ((*curr)->cp == "[" || (*curr)->cp == "=" || (*curr)->cp == "," || (*curr)->cp == ";")
 
       if (array())
       {
         if (new_init())
         {
+          
           if (list2())
           {
             return true;
@@ -1690,7 +1734,15 @@ bool globalflag = false;
 
       if ((*curr)->cp == ",")
       {
-        cout<<"Inserting in symbol Table : "<<STobj.insertST(globalname , globaltype , globalcurrScope , &STstart)<<endl; //inserting in symbol table
+        if(globalclassname == "Global")
+        {
+          cout<<"Inserting in symbol Table : "<<STobj.insertST(globalname , globaltype , globalcurrScope , &STstart)<<endl; //inserting in symbol table
+        }
+        else
+        {
+          classDTobj.insertCDT(globalname , globaltype , globalAM , globalTM , &CDTRef);
+        }
+        
 
         (*curr) = (*curr)->next;
         if ((*curr)->cp == "ID")
@@ -1700,7 +1752,15 @@ bool globalflag = false;
 
           if((*curr)->cp != ";")
           {
-            cout<<"Inserting in symbol Table : "<<STobj.insertST(globalname , globaltype , globalcurrScope , &STstart)<<endl; //inserting in symbol table
+
+              if(globalclassname == "Global")
+                {
+                 cout<<"Inserting in symbol Table : "<<STobj.insertST(globalname , globaltype , globalcurrScope , &STstart)<<endl; //inserting in symbol table
+                }
+               else
+                  {
+                    classDTobj.insertCDT(globalname , globaltype , globalAM , globalTM , &CDTRef);
+                  }
           }
 
           (*curr) = (*curr)->next;
@@ -1739,7 +1799,15 @@ bool globalflag = false;
       
       else if ((*curr)->cp == ";")
       {
-        cout<<"Inserting in symbol Table : "<<STobj.insertST(globalname , globaltype , globalcurrScope , &STstart)<<endl; //inserting in symbol table
+        if(globalclassname == "Global")
+            {
+             cout<<"Inserting in symbol Table : "<<STobj.insertST(globalname , globaltype , globalcurrScope , &STstart)<<endl; //inserting in symbol table
+            }
+        else
+            {
+              cout<<"inserting in class data table"<<endl;
+               classDTobj.insertCDT(globalname , globaltype , globalAM , globalTM , &CDTRef);
+            }
         (*curr) = (*curr)->next;
         return true;
       }

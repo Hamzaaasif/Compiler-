@@ -1,17 +1,31 @@
-vacant sum(int a , point a)
+class a
 {
-  int checkl;
-  bool flag;
-}
-static int sum(int a , point b)
+  float p;
+  int  sum(int para)
+  {
+    point p;
+  }
+  vector sum(float a )
+  {
+    
+  }
+};
+class b 
 {
-  a = a+bv;
-}
-bool sum(point b)
+  point p;
+  string s;
+  vector sum(float a )
+  {
+    float p;
+    int sum;
+    flaot summmmm;
+    string s;
+  }
+};
+vacant sum()
 {
-  a = a+bv;
-}
 
+}
 void main()
 {
   float point;
