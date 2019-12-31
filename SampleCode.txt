@@ -1,31 +1,20 @@
-class a
+class vector
 {
-  point m;
-  a(int sum , vector v)
-  {
-    int a;
-    float b;
-  }
+  public:
+  int a;
 };
 
-class b 
+class point : public vector
 {
-  b(point p , float a)
-  {
-
-  }
+  public:
+  vector vec;
+  int f;
 };
 
-class c : private a
-{
-  c(int a , float b)
-  {
+point poi;
+int temp;
 
-  }
-  
-};
-
-
+temp = poi.vec.a;
 void main()
 {
 

@@ -134,6 +134,7 @@ string lookupST(string name , symbolTable *start)
         }
         else
         {
+          cout<<"Not decleared "<<endl;
           return "NULL";
         }
   

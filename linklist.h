@@ -41,6 +41,13 @@ bool globalflag = false;
   string globalTM ="";
   string globalAM = "private";
 
+  //compatibility
+  string globalLeftType = "";
+  string globalRightType = "";
+  string Type = "";
+  string globalOperator ="";
+  string tempvar="";
+
   void insert(string cp, string vp, int lineno, linklist **start)
   {
     linklist *ptr = new linklist;
@@ -81,15 +88,13 @@ bool globalflag = false;
           if ((*curr)->cp == "main")
           {
             globalname = (*curr)->vp; // Name
-            cout<<"Function Name: "<< (*curr)->vp<<endl;
-
             (*curr) = (*curr)->next;
             if ((*curr)->cp == "(")
             {
               (*curr) = (*curr)->next;
               if (NV())
               {
-                cout<<"Main insertion: "<<Fnobj.insertfn(globalname , globalRetType , globalparalist , "Global" , &FNstart)<<endl;
+                Fnobj.insertfn (globalname , globalRetType , globalparalist , "Global" , &FNstart);
 
                 if ((*curr)->cp == "{")
                 {
@@ -137,12 +142,10 @@ bool globalflag = false;
     }
     else 
     {
-      cout << "Error syntax at:  " << (*curr)->cp <<"at line no : "<<(*curr)->lineno<< endl;
+      cout << "Error syntax at:  " << (*curr)->cp <<"     line no :  "<<(*curr)->lineno<< endl;
       return false;
     }
   }
-
-
 
   bool VI()
   {
@@ -150,8 +153,6 @@ bool globalflag = false;
     if ((*curr)->cp == "void" )
     {
       globalRetType = (*curr)->vp;
-      cout<<"Return Type: "<<(*curr)->vp<<endl;
-
       (*curr) = (*curr)->next;
       return true;
     }
@@ -161,17 +162,11 @@ bool globalflag = false;
     }
   }
 
-
-
   bool NV()
   {
-
-
-      if ((*curr)->cp == "void") //first set
+      if ((*curr)->cp == "void") 
       {
         globalparalist = (*curr)->vp; //parameter List
-        cout<<"Function Para List: "<<(*curr)->vp<<endl;
-
         (*curr) = (*curr)->next;
         if((*curr)->cp == ")")
         {
@@ -194,7 +189,6 @@ bool globalflag = false;
 
       else
       {
-        // cout << "Error syntax at: " << (*curr)->cp << endl;
         return false;
       }
         
@@ -205,7 +199,7 @@ bool globalflag = false;
   bool defs()
   {
     
-    if ((*curr)->cp == "class") //|| (*curr)->cp == "ID" || (*curr)->cp == "DT" || (*curr)->cp == "static"
+    if ((*curr)->cp == "class") 
     {
       if (classs())
       {
@@ -220,7 +214,7 @@ bool globalflag = false;
     else if ((*curr)->cp == "ID")
       {
         globaltype = (*curr)->vp; //name in case of ass_st and type in case of obj|fn dec i.e ID
-        cout<<endl<<"Type at defs : "<< (*curr)->vp<<endl;
+
 
         (*curr) = (*curr)->next;
         if (defs1())
@@ -235,14 +229,10 @@ bool globalflag = false;
       else if ((*curr)->cp == "DT")
       {
         globaltype = (*curr)->vp; //type 
-        cout<<endl<<"Type at defs : "<< (*curr)->vp<<endl;
-
          (*curr) = (*curr)->next;
          if ((*curr)->cp == "ID")
           {
             globalname = (*curr)->vp; //Name 
-            cout<<endl<<"Name at defs : "<< (*curr)->vp<<endl;
-
             (*curr) = (*curr)->next;
             if (defs2())
              {
@@ -253,7 +243,6 @@ bool globalflag = false;
            }
          }
       }
-
 
       else if ((*curr)->cp == "static")
       {
@@ -269,19 +258,19 @@ bool globalflag = false;
             }
             else
             {
-              // cout << "Error syntax at: " << (*curr)->cp << endl;
+              
               return false;
             }
           }
           else
           {
-            // cout << "Error syntax at: " << (*curr)->cp << endl;
+            
             return false;
           }
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
@@ -294,7 +283,7 @@ bool globalflag = false;
 
     else
     {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
+      
       return false;
     }
  }
@@ -342,43 +331,42 @@ bool globalflag = false;
                 }
                 else
                 {
-                  // cout << "Error syntax at: " << (*curr)->cp << endl;
+                  
                   return false;
                 }
               }
               else
               {
-                // cout << "Error syntax at: " << (*curr)->cp << endl;
+                
                 return false;
               }
             }
             else
             {
-              // cout << "Error syntax at: " << (*curr)->cp << endl;
+              
               return false;
             }
           }
           else
           {
-            // cout << "Error syntax at: " << (*curr)->cp << endl;
+            
             return false;
           }
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
       else
       {
-        // cout << "Error syntax at: " << (*curr)->cp << endl;
+        
         return false;
       }
     }
     else
     {
-      // cout<<"Error syntax at class: "<<(*curr)->cp<<endl;
       return false;
     }
   }
@@ -400,13 +388,13 @@ bool globalflag = false;
           }
           else
           {
-            // cout << "Error syntax at: " << (*curr)->cp << endl;
+            
             return false;
           }
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
@@ -428,13 +416,13 @@ bool globalflag = false;
             }
             else
             {
-              // cout << "Error syntax at: " << (*curr)->cp << endl;
+              
               return false;
             }
           }
           else
           {
-            // cout << "Error syntax at: " << (*curr)->cp << endl;
+            
             return false;
           }
         }
@@ -458,13 +446,13 @@ bool globalflag = false;
           }
           else
           {
-            // cout << "Error syntax at: " << (*curr)->cp << endl;
+            
             return false;
           }
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
@@ -486,13 +474,13 @@ bool globalflag = false;
             }
             else
             {
-              // cout << "Error syntax at: " << (*curr)->cp << endl;
+              
               return false;
             }
           }
           else
           {
-            // cout << "Error syntax at: " << (*curr)->cp << endl;
+            
             return false;
           }
         }
@@ -645,7 +633,7 @@ bool globalflag = false;
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
@@ -657,7 +645,7 @@ bool globalflag = false;
 
     else
     {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
+      
       return false;
     }
   }
@@ -676,7 +664,7 @@ bool globalflag = false;
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
@@ -688,7 +676,7 @@ bool globalflag = false;
 
       else
       {
-        // cout << "Error syntax at: " << (*curr)->cp << endl;
+        
         return false;
       }
   }
@@ -697,9 +685,6 @@ bool globalflag = false;
   bool defs1()
   {
     
-   // if ((*curr)->cp == "AOP" || (*curr)->cp == "ID")
-
-
       if (ass_st())
       {
         return true;
@@ -708,7 +693,6 @@ bool globalflag = false;
       else if ((*curr)->cp == "ID")
       {
         globalname = (*curr)->vp;
-        cout<<"Name at defs1: "<<(*curr)->vp<<endl;
 
         (*curr) = (*curr)->next;
         if (X())
@@ -717,14 +701,14 @@ bool globalflag = false;
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
 
       else
       {
-        // cout << "Error syntax at: " << (*curr)->cp << endl;
+        
         return false;
       }
   }
@@ -747,13 +731,13 @@ bool globalflag = false;
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
       else
       {
-        // cout << "Error syntax at: " << (*curr)->cp << endl;
+        
         return false;
       }
   }
@@ -761,8 +745,6 @@ bool globalflag = false;
   bool terminal()
   {
     
-   // if ((*curr)->cp == "[" || (*curr)->cp == "=" || (*curr)->cp == ";" || (*curr)->cp == "(" || (*curr)->cp == ",")
-
       if (fun_dec())
       {
         return true;
@@ -773,7 +755,7 @@ bool globalflag = false;
       }
       else
       {
-        // cout << "Error syntax at: " << (*curr)->cp << endl;
+        
         return false;
       }
   }
@@ -781,10 +763,6 @@ bool globalflag = false;
 
   bool defs2()
   {
-    
-    // if ((*curr)->cp == "[" || (*curr)->cp == "=" || (*curr)->cp == ";" || (*curr)->cp == "(" || (*curr)->cp == ",")
-     //{
-
       if (dt_dec())
       {
         return true;
@@ -798,13 +776,13 @@ bool globalflag = false;
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
       else
       {
-        // cout << "Error syntax at: " << (*curr)->cp << endl;
+        
         return false;
       }
   }
@@ -828,7 +806,7 @@ bool globalflag = false;
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
@@ -846,14 +824,14 @@ bool globalflag = false;
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
 
       else
       {
-        // cout << "Error syntax at: " << (*curr)->cp << endl;
+        
         return false;
       }
   }
@@ -868,7 +846,7 @@ bool globalflag = false;
         {
           (*curr) = (*curr)->next;
 
-           cout<<"Function insertion: "<<Fnobj.insertfn(tempname , temptype , globalparalist , globalclassname , &FNstart)<<endl; //class ky lye set krna hy abi
+           Fnobj.insertfn(tempname , temptype , globalparalist , globalclassname , &FNstart); 
  
             if ((*curr)->cp == "{")
             {
@@ -884,37 +862,32 @@ bool globalflag = false;
                 }
                 else
                 {
-                  // cout << "Error syntax at: " << (*curr)->cp << endl;
+                  
                   return false;
                 }
               }
               else
               {
-                // cout << "Error syntax at: " << (*curr)->cp << endl;
+                
                 return false;
               }
             }
             else
             {
-              // cout << "Error syntax at: " << (*curr)->cp << endl;
+              
               return false;
             }
-          // else
-          // {
-            //cout << "Error syntax at: " << (*curr)->cp << endl;
-          //   return false;
-          // }
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
 
       else
       {
-        // cout << "Error syntax at: " << (*curr)->cp << endl;
+        
         return false;
       }
   }
@@ -935,19 +908,19 @@ bool globalflag = false;
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
       else
       {
-        // cout << "Error syntax at: " << (*curr)->cp << endl;
+        
         return false;
       }
     }
     else
     {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
+      
       return false;
     }
   }
@@ -971,7 +944,6 @@ bool globalflag = false;
 
           globaltype = (*curr)->vp;
           globalparalist += (*curr)->vp + "," ;
-          cout<<"Para List: "<<globalparalist<<endl;
 
           (*curr) = (*curr)->next;
 
@@ -983,7 +955,7 @@ bool globalflag = false;
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
@@ -1003,7 +975,6 @@ bool globalflag = false;
 
           globaltype = (*curr)->vp;
           globalparalist += (*curr)->vp + "," ;
-          cout<<"Para List: "<<globalparalist<<endl;
 
           (*curr) = (*curr)->next;
           globalname = (*curr)->vp;
@@ -1015,7 +986,7 @@ bool globalflag = false;
 
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
@@ -1042,10 +1013,6 @@ bool globalflag = false;
             {
               parent = DTtemp;
             }
-            // else
-            // {
-            //   cout<<"INHERITANCE NOT ALLOWED !! "<<endl;
-            // }
             (*curr) = (*curr)->next;
             return true;
           }
@@ -1059,7 +1026,7 @@ bool globalflag = false;
 
     else
     {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
+      
       return false;
    }
 
@@ -1078,7 +1045,7 @@ bool globalflag = false;
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
@@ -1106,8 +1073,6 @@ bool globalflag = false;
 
   bool E()
   {
-    
-   // if ((*curr)->cp == "," || (*curr)->cp == ")")
 
       if ((*curr)->cp == ",")
       {
@@ -1134,8 +1099,6 @@ bool globalflag = false;
 
   bool MST()
   {
-    
-  //  if ((*curr)->cp == "if" || (*curr)->cp == "while" || (*curr)->cp == "switch" || (*curr)->cp == "for" || (*curr)->cp == "return" || (*curr)->cp == "continue" || (*curr)->cp == "break" || (*curr)->cp == "ID" || (*curr)->cp == "DT" || (*curr)->cp == "}")
 
       if (SST())
       {
@@ -1150,7 +1113,7 @@ bool globalflag = false;
       }
     else
     {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
+      
       return false;
     }
   }
@@ -1203,7 +1166,7 @@ bool globalflag = false;
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
@@ -1219,7 +1182,7 @@ bool globalflag = false;
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
@@ -1228,13 +1191,11 @@ bool globalflag = false;
       {
         globalflag = false;
         globaltype = (*curr)->vp; //Type
-        cout<<"Type at SST: "<<(*curr)->vp<<endl;
 
         (*curr) = (*curr)->next;
         if ((*curr)->cp == "ID")
         {
           globalname = (*curr)->vp; //Name
-          cout<<"Name at SST: "<< (*curr)->vp<<endl;
 
           (*curr) = (*curr)->next;
           if (SST2())
@@ -1243,20 +1204,20 @@ bool globalflag = false;
           }
           else
           {
-            // cout << "Error syntax at: " << (*curr)->cp << endl;
+            
             return false;
           }
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
 
     else
     {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
+      
       return false;
     }
   }
@@ -1264,8 +1225,6 @@ bool globalflag = false;
 
   bool dt_dec()
   {
-    
-   // if ((*curr)->cp == "[" || (*curr)->cp == "AOP" || (*curr)->cp == "," || (*curr)->cp == ";")
 
       if (new_array())
       {
@@ -1277,7 +1236,7 @@ bool globalflag = false;
       }
       else
       {
-        // cout << "Error syntax at: " << (*curr)->cp << endl;
+        
         return false;
       }
   }
@@ -1300,25 +1259,25 @@ bool globalflag = false;
           }
           else
           {
-            // cout << "Error syntax at: " << (*curr)->cp << endl;
+            
             return false;
           }
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
       else
       {
-        // cout << "Error syntax at: " << (*curr)->cp << endl;
+        
         return false;
       }
     }
     else
     {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
+      
       return false;
     }
   }
@@ -1344,25 +1303,25 @@ bool globalflag = false;
               }
               else
               {
-                // cout << "Error syntax at: " << (*curr)->cp << endl;
+                
                 return false;
               }
             }
             else
             {
-              // cout << "Error syntax at: " << (*curr)->cp << endl;
+              
               return false;
             }
           }
           else
           {
-            // cout << "Error syntax at: " << (*curr)->cp << endl;
+            
             return false;
           }
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
@@ -1375,7 +1334,7 @@ bool globalflag = false;
 
     else
     {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
+      
       return false;
     }
 
@@ -1384,9 +1343,6 @@ bool globalflag = false;
 
   bool array3()
   {
-    
-   // if ((*curr)->cp == "intconst" || (*curr)->cp == "ID" || (*curr)->cp == "(" || (*curr)->cp == "!")
-
       if (OE())
       {
         if (array4())
@@ -1395,14 +1351,14 @@ bool globalflag = false;
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
 
       else
       {
-        // cout << "Error syntax at: " << (*curr)->cp << endl;
+        
         return false;
       }
   }
@@ -1410,8 +1366,6 @@ bool globalflag = false;
 
   bool array4()
   {
-    
-   // if ((*curr)->cp == "," || (*curr)->cp == "}")
 
       if ((*curr)->cp == ",")
       {
@@ -1424,13 +1378,13 @@ bool globalflag = false;
           }
           else
           {
-            // cout << "Error syntax at: " << (*curr)->cp << endl;
+            
             return false;
           }
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
@@ -1447,8 +1401,6 @@ bool globalflag = false;
 
   bool init()
   {
-    
-   // if ((*curr)->cp == "AOP" || (*curr)->cp == "," || (*curr)->cp == ";")
 
       if ((*curr)->cp == "AOP")
       {
@@ -1459,7 +1411,7 @@ bool globalflag = false;
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
@@ -1471,7 +1423,6 @@ bool globalflag = false;
 
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
           return false;
         }
 
@@ -1479,17 +1430,15 @@ bool globalflag = false;
 
   bool init2()
   {
-    
-  //  if ((*curr)->cp == "intconst" || (*curr)->cp == "(" || (*curr)->cp == "ID" || (*curr)->cp == "!")
       if (OE())
       {
         if ((*curr)->cp == ";")
         {
+          (*curr) = (*curr)->next;
           return true;
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
           return false;
         }
         
@@ -1498,9 +1447,10 @@ bool globalflag = false;
       {
         return true;
       }
+
       else
       {
-        // cout << "Error syntax at: " << (*curr)->cp << endl;
+        
         return false;
       }
   }
@@ -1509,8 +1459,6 @@ bool globalflag = false;
   bool init3()
   {
     
-    //if ((*curr)->cp == "AOP" || (*curr)->cp == "," || (*curr)->cp == ";")
-
       if ((*curr)->cp == "AOP")
       {
         (*curr) = (*curr)->next;
@@ -1520,7 +1468,7 @@ bool globalflag = false;
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
@@ -1540,10 +1488,8 @@ bool globalflag = false;
 
   bool init4()
   {
-    
-   // if ((*curr)->cp == "ID" || (*curr)->cp == "intconst")
    
-      if ((*curr)->cp == "ID")
+      if ((*curr)->cp == "ID" && (*curr)->next->cp == "AOP")
       {
         (*curr) = (*curr)->next;
         if (init3())
@@ -1554,13 +1500,13 @@ bool globalflag = false;
           }
           else
           {
-            // cout << "Error syntax at: " << (*curr)->cp << endl;
+            
             return false;
           }
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
@@ -1573,13 +1519,13 @@ bool globalflag = false;
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
       else
       {
-        // cout << "Error syntax at: " << (*curr)->cp << endl;
+        
         return false;
       }
   }
@@ -1593,7 +1539,7 @@ bool globalflag = false;
 
         if(!globalflag)
         {
-          cout<<"Inserting in symbol Table : "<<STobj.insertST(globalname , globaltype , globalcurrScope , &STstart)<<endl; //inserting in symbol table
+          STobj.insertST(globalname , globaltype , globalcurrScope , &STstart); //inserting in symbol table
         }
         else
         {
@@ -1605,14 +1551,12 @@ bool globalflag = false;
         if ((*curr)->cp == "ID")
         {
           globalname = (*curr)->vp;
-          cout<<"Name at List after ,: "<< (*curr)->vp<<endl; 
-
           (*curr) = (*curr)->next;
           if((*curr)->cp != ";")
           {
             if(!globalflag)
              {
-               cout<<"Inserting in symbol Table : "<<STobj.insertST(globalname , globaltype , globalcurrScope , &STstart)<<endl; //inserting in symbol table
+               STobj.insertST(globalname , globaltype , globalcurrScope , &STstart); //inserting in symbol table
             }
             else
             {
@@ -1629,19 +1573,19 @@ bool globalflag = false;
             }
             else
             {
-              // cout << "Error syntax at: " << (*curr)->cp << endl;
+              
               return false;
             }
           }
           else
           {
-            // cout << "Error syntax at: " << (*curr)->cp << endl;
+            
             return false;
           }
         }
            else
           {
-            // cout << "Error syntax at: " << (*curr)->cp << endl;
+            
             return false;
           }
       }
@@ -1650,7 +1594,7 @@ bool globalflag = false;
       {
         if(globalflag == false)
         {
-          cout<<"Inserting in symbol Table : "<<STobj.insertST(globalname , globaltype , globalcurrScope , &STstart)<<endl; //inserting in symbol table
+         STobj.insertST(globalname , globaltype , globalcurrScope , &STstart); //inserting in symbol table
         }
         else
         {
@@ -1664,7 +1608,7 @@ bool globalflag = false;
 
     else
     {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
+      
       return false;
     }
   }
@@ -1685,20 +1629,20 @@ bool globalflag = false;
           }
           else
           {
-            // cout << "Error syntax at: " << (*curr)->cp << endl;
+            
             return false;
           }
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
 
       else
       {
-        // cout << "Error syntax at: " << (*curr)->cp << endl;
+        
         return false;
       }
   }
@@ -1706,9 +1650,7 @@ bool globalflag = false;
   bool new_init()
   {
     
-   // if ((*curr)->cp == "ID" || (*curr)->cp == "," || (*curr)->cp == ";" || (*curr)->cp == "=")
-  
-      if ((*curr)->cp == "AOP") //changes yhan ki hain //
+      if ((*curr)->cp == "AOP") 
       {
 
         (*curr) = (*curr)->next;
@@ -1721,7 +1663,7 @@ bool globalflag = false;
           }
           else
           {
-            // cout << "Error syntax at: " << (*curr)->cp << endl;
+            
             return false;
           }
         }
@@ -1738,7 +1680,7 @@ bool globalflag = false;
 
     else
     {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
+      
       return false;
     }
   }
@@ -1746,14 +1688,12 @@ bool globalflag = false;
 
   bool list2()
   {
-    
-   // if ((*curr)->cp == "," || (*curr)->cp == ";")
 
       if ((*curr)->cp == ",")
       {
         if(globalflag == false)
         {
-          cout<<"Inserting in symbol Table : "<<STobj.insertST(globalname , globaltype , globalcurrScope , &STstart)<<endl; //inserting in symbol table
+         STobj.insertST(globalname , globaltype , globalcurrScope , &STstart); //inserting in symbol table
         }
         else
         {
@@ -1765,14 +1705,13 @@ bool globalflag = false;
         if ((*curr)->cp == "ID")
         {
           globalname = (*curr)->vp;
-          cout<<"Name at List after ,: "<< (*curr)->vp<<endl;
 
           if((*curr)->cp != ";")
           {
 
               if(globalflag == false)
                 {
-                 cout<<"Inserting in symbol Table : "<<STobj.insertST(globalname , globaltype , globalcurrScope , &STstart)<<endl; //inserting in symbol table
+                 STobj.insertST(globalname , globaltype , globalcurrScope , &STstart); //inserting in symbol table
                 }
                else
                   {
@@ -1791,25 +1730,25 @@ bool globalflag = false;
               }
               else
               {
-                // cout << "Error syntax at: " << (*curr)->cp << endl;
+                
                 return false;
               }
             }
             else
             {
-              // cout << "Error syntax at: " << (*curr)->cp << endl;
+              
               return false;
             }
           }
           else
           {
-            // cout << "Error syntax at: " << (*curr)->cp << endl;
+            
             return false;
           }
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
@@ -1818,11 +1757,10 @@ bool globalflag = false;
       {
         if(globalflag == false)
             {
-             cout<<"Inserting in symbol Table : "<<STobj.insertST(globalname , globaltype , globalcurrScope , &STstart)<<endl; //inserting in symbol table
+             STobj.insertST(globalname , globaltype , globalcurrScope , &STstart); //inserting in symbol table
             }
         else
             {
-              cout<<"inserting in class data table"<<endl;
                classDTobj.insertCDT(globalname , globaltype , globalAM , globalTM , &CDTRef);
             }
         (*curr) = (*curr)->next;
@@ -1830,22 +1768,19 @@ bool globalflag = false;
       }
     else
     {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
+      
       return false;
     }
   }
 
   bool array()
   {
-    
-   //  if ((*curr)->cp == "[" || (*curr)->cp == "." || (*curr)->cp == "(" || (*curr)->cp == "uniary" || (*curr)->cp == "AOP" || (*curr)->cp == ";" )
-    
+      
       if ((*curr)->cp == "[")
       {
         (*curr) = (*curr)->next;
         if (OE())
         {
-          //(*curr) = (*curr)->next;  //check krna pary ga yhan pay
           if ((*curr)->cp == "]")
           {
             (*curr) = (*curr)->next;
@@ -1853,13 +1788,13 @@ bool globalflag = false;
           }
           else
           {
-            // cout << "Error syntax at: " << (*curr)->cp << endl;
+            
             return false;
           }
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
@@ -1871,7 +1806,7 @@ bool globalflag = false;
 
     else
     {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
+      
       return false;
     }
   }
@@ -1879,7 +1814,6 @@ bool globalflag = false;
 
   bool ass_st()
   {
-    //if ((*curr)->cp == "AOP")
 
       if (ass_st1())
       {
@@ -1898,13 +1832,13 @@ bool globalflag = false;
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
       else
       {
-        // cout << "Error syntax at: " << (*curr)->cp << endl;
+        
         return false;
       }
   }
@@ -1915,21 +1849,30 @@ bool globalflag = false;
     
     if ((*curr)->cp == "AOP")
     {
+      string templeft = STobj.lookupST(globaltype , STstart);
+      string tempOperator = (*curr)->vp;
+
       (*curr) = (*curr)->next;
       if (OE())
       {
-        //(*curr) = (*curr)->next; //check krna paryga
+        globalRightType = Type;
+        cout<<"Left Type:  "<<templeft <<"   Right Type:  "<<globalRightType <<"    Operator :  "<<tempOperator<<endl;
+        Type = compatibilityCheck(templeft ,globalRightType,"",tempOperator);
+        if(Type != "NULL")
+        {
+          cout<<"Compatible Type : "<<Type<<endl;
+        }
         return true;
       }
       else
       {
-        // cout << "Error syntax at: " << (*curr)->cp << endl;
+        
         return false;
       }
     }
     else
     {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
+      
       return false;
     }
   }
@@ -1938,8 +1881,6 @@ bool globalflag = false;
   bool XX()
   {
     
-//    if ((*curr)->cp == "AOP" || (*curr)->cp == ";")
-  
       if (ass_st1())
       {
         if (XX())
@@ -1948,7 +1889,7 @@ bool globalflag = false;
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
@@ -1958,7 +1899,7 @@ bool globalflag = false;
       }
       else
        {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
+      
       return false;
        }
   }
@@ -1966,8 +1907,7 @@ bool globalflag = false;
 
   bool intconstructor_dec()
   {
-    
-   // if ((*curr)->cp == "intconst" || (*curr)->cp == "(" || (*curr)->cp == "ID" || (*curr)->cp == "!" || (*curr)->cp == ")")
+
     
       if (arg())
       {
@@ -1981,20 +1921,20 @@ bool globalflag = false;
           }
           else
           {
-            // cout << "Error syntax at: " << (*curr)->cp << endl;
+            
             return false;
           }
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
 
       else
       {
-        // cout << "Error syntax at: " << (*curr)->cp << endl;
+        
         return false;
       }
     
@@ -2003,11 +1943,9 @@ bool globalflag = false;
 
   bool fn_call1()
   {
-    
-   // if ((*curr)->cp == "." || (*curr)->cp == ")")
-    
-      if (check_id())
-      {
+     
+      //if (check_id())
+     // {
         if ((*curr)->cp == "(")
         {
           (*curr) = (*curr)->next;
@@ -2020,34 +1958,33 @@ bool globalflag = false;
             }
             else
             {
-              // cout << "Error syntax at: " << (*curr)->cp << endl;
+              
               return false;
             }
           }
           else
           {
-            // cout << "Error syntax at: " << (*curr)->cp << endl;
+            
             return false;
           }
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
-      }
-      else
-      {
-        // cout << "Error syntax at: " << (*curr)->cp << endl;
-        return false;
-      }
+      // }
+      // else
+      // {
+        
+      //   return false;
+      // }
   }
 
 
   bool check_id()
   { 
-   // if ((*curr)->cp == "." || (*curr)->cp == "(")
-    
+  
       if ((*curr)->cp == ".")
       {
         (*curr) = (*curr)->next;
@@ -2062,19 +1999,19 @@ bool globalflag = false;
             }
             else
             {
-              // cout << "Error syntax at: " << (*curr)->cp << endl;
+              
               return false;
             }
           }
           else
           {
-            // cout << "Error syntax at: " << (*curr)->cp << endl;
+            
             return false;
           }
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
@@ -2086,7 +2023,7 @@ bool globalflag = false;
 
     else
     {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
+      
       return false;
     }
   }
@@ -2094,8 +2031,6 @@ bool globalflag = false;
 
   bool arg()
   {
-    
-    //if ((*curr)->cp == "intconst" || (*curr)->cp == "(" || (*curr)->cp == "ID" || (*curr)->cp == "!" || (*curr)->cp == ")")
     
       if (OE())
       {
@@ -2105,7 +2040,7 @@ bool globalflag = false;
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
@@ -2115,7 +2050,7 @@ bool globalflag = false;
       }
     else
     {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
+      
       return false;
     }
   }
@@ -2123,9 +2058,7 @@ bool globalflag = false;
 
   bool arg1()
   {
-    
-    //if ((*curr)->cp == "," || (*curr)->cp == ")")
-    
+      
       if ((*curr)->cp == ",")
       {
         (*curr) = (*curr)->next;
@@ -2138,7 +2071,7 @@ bool globalflag = false;
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
@@ -2148,7 +2081,7 @@ bool globalflag = false;
       }
     else
     {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
+      
       return false;
     }
   }
@@ -2156,9 +2089,7 @@ bool globalflag = false;
 
   bool SST1()
   {
-    
-  //  if ((*curr)->cp == "[" || (*curr)->cp == "." || (*curr)->cp == "uniary" || (*curr)->cp == "AOP" || (*curr)->cp == "ID")
-    
+     
       if (array())
       {
         if (L2())
@@ -2167,7 +2098,7 @@ bool globalflag = false;
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
@@ -2183,14 +2114,14 @@ bool globalflag = false;
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
 
       else
       {
-        // cout << "Error syntax at: " << (*curr)->cp << endl;
+        
         return false;
       }
   }
@@ -2198,9 +2129,7 @@ bool globalflag = false;
 
   bool L2()
   {
-    
-   // if ((*curr)->cp == "." || (*curr)->cp == "(" || (*curr)->cp == "uniary" || (*curr)->cp == "AOP" || (*curr)->cp == "ID")
-    
+      
       if (fn_call())
       {
         return true;
@@ -2215,7 +2144,7 @@ bool globalflag = false;
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
@@ -2225,7 +2154,7 @@ bool globalflag = false;
       }
       else
       {
-        // cout << "Error syntax at: " << (*curr)->cp << endl;
+        
         return false;
       }
     
@@ -2234,9 +2163,7 @@ bool globalflag = false;
 
   bool xxx()
   {
-    
-  //  if ((*curr)->cp == "[" || (*curr)->cp == "," || (*curr)->cp == ";" || (*curr)->cp == "ID" || (*curr)->cp == "(")
-    
+  
       if (obj_dec())
       {
         return true;
@@ -2250,13 +2177,13 @@ bool globalflag = false;
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
       else
       {
-        // cout << "Error syntax at: " << (*curr)->cp << endl;
+        
         return false;
       }
   }
@@ -2265,15 +2192,14 @@ bool globalflag = false;
   bool SST2()
   {
     
-   // if ((*curr)->cp == "AOP" || (*curr)->cp == "[" || (*curr)->cp == "," || (*curr)->cp == ";")
-    
+  
       if (dt_dec())
       {
         return true;
       }
       else
       {
-        // cout << "Error syntax at: " << (*curr)->cp << endl;
+        
         return false;
       }
   }
@@ -2282,8 +2208,7 @@ bool globalflag = false;
   bool fn_call()
   {
     
-   // if ((*curr)->cp == "." || (*curr)->cp == "(")
-    
+   
       if (fn_call1())
       {
         if ((*curr)->cp == ";")
@@ -2293,13 +2218,13 @@ bool globalflag = false;
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
       else
       {
-        // cout << "Error syntax at: " << (*curr)->cp << endl;
+        
         return false;
       }
   }
@@ -2325,13 +2250,13 @@ bool globalflag = false;
       }
       else
       {
-        // cout << "Error syntax at: " << (*curr)->cp << endl;
+        
         return false;
       }
     }
     else
     {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
+      
       return false;
     }
   }
@@ -2340,8 +2265,7 @@ bool globalflag = false;
   bool OE1()
   {
     
-   // if ((*curr)->cp == "intconst" || (*curr)->cp == "!" || (*curr)->cp == "ID" || (*curr)->cp == "(" || (*curr)->cp == ";")
-    
+   
       if (OE())
       {
         return true;
@@ -2352,7 +2276,7 @@ bool globalflag = false;
       }
       else
        {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
+      
       return false;
       }
   }
@@ -2386,49 +2310,49 @@ bool globalflag = false;
                   }
                   else
                   {
-                    // cout << "Error syntax at: " << (*curr)->cp << endl;
+                    
                     return false;
                   }
                 }
                 else
                 {
-                  // cout << "Error syntax at: " << (*curr)->cp << endl;
+                  
                   return false;
                 }
               }
               else
               {
-                // cout << "Error syntax at: " << (*curr)->cp << endl;
+                
                 return false;
               }
             }
             else
             {
-              // cout << "Error syntax at: " << (*curr)->cp << endl;
+              
               return false;
             }
           }
           else
           {
-            // cout << "Error syntax at: " << (*curr)->cp << endl;
+            
             return false;
           }
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
       else
       {
-        // cout << "Error syntax at: " << (*curr)->cp << endl;
+        
         return false;
       }
     }
     else
     {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
+      
       return false;
     }
   }
@@ -2436,9 +2360,7 @@ bool globalflag = false;
 
   bool optional_else()
   {
-    
-   // if ((*curr)->cp == "else" || (*curr)->cp == "if" || (*curr)->cp == "switch" || (*curr)->cp == "for" || (*curr)->cp == "return" || (*curr)->cp == "ID" || (*curr)->cp == "DT" || (*curr)->cp == "continue" || (*curr)->cp == "break" || (*curr)->cp == "}")
-    
+      
       if ((*curr)->cp == "else")
       {
         (*curr) = (*curr)->next;
@@ -2454,19 +2376,19 @@ bool globalflag = false;
             }
             else
             {
-              // cout << "Error syntax at: " << (*curr)->cp << endl;
+              
               return false;
             }
           }
           else
           {
-            // cout << "Error syntax at: " << (*curr)->cp << endl;
+            
             return false;
           }
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
@@ -2510,44 +2432,44 @@ bool globalflag = false;
                 }
                 else
                 {
-                  // cout << "Error syntax at: " << (*curr)->cp << endl;
+                  
                   return false;
                 }
               }
               else
               {
-                // cout << "Error syntax at: " << (*curr)->cp << endl;
+                
                 return false;
               }
             }
             else
             {
-              // cout << "Error syntax at: " << (*curr)->cp << endl;
+              
               return false;
             }
           }
           else
           {
-            // cout << "Error syntax at: " << (*curr)->cp << endl;
+            
             return false;
           }
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
       else
       {
-        // cout << "Error syntax at: " << (*curr)->cp << endl;
+        
         return false;
       }
     }
     
     else
     {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
+      
       return false;
     }
   }
@@ -2581,49 +2503,49 @@ bool globalflag = false;
                   }
                   else
                   {
-                    // cout << "Error syntax at: " << (*curr)->cp << endl;
+                    
                     return false;
                   }
                 }
                 else
                 {
-                  // cout << "Error syntax at: " << (*curr)->cp << endl;
+                  
                   return false;
                 }
               }
               else
               {
-                // cout << "Error syntax at: " << (*curr)->cp << endl;
+                
                 return false;
               }
             }
             else
             {
-              // cout << "Error syntax at: " << (*curr)->cp << endl;
+              
               return false;
             }
           }
           else
           {
-            // cout << "Error syntax at: " << (*curr)->cp << endl;
+            
             return false;
           }
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
       else
       {
-        // cout << "Error syntax at: " << (*curr)->cp << endl;
+        
         return false;
       }
     }
     else
     {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
+      
       return false;
     }
   }
@@ -2632,8 +2554,7 @@ bool globalflag = false;
   bool case_st()
   {
     
-    //if ((*curr)->cp == "case" || (*curr)->cp == "default" || (*curr)->cp == "}")
-    
+  
       if ((*curr)->cp == "case")
       {
         (*curr) = (*curr)->next;
@@ -2656,37 +2577,37 @@ bool globalflag = false;
                   }
                   else
                   {
-                    // cout << "Error syntax at: " << (*curr)->cp << endl;
+                    
                     return false;
                   }
                 }
                 else
                 {
-                  // cout << "Error syntax at: " << (*curr)->cp << endl;
+                  
                   return false;
                 }
               }
               else
               {
-                // cout << "Error syntax at: " << (*curr)->cp << endl;
+                
                 return false;
               }
             }
             else
             {
-              // cout << "Error syntax at: " << (*curr)->cp << endl;
+              
               return false;
             }
           }
           else
           {
-            // cout << "Error syntax at: " << (*curr)->cp << endl;
+            
             return false;
           }
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
@@ -2699,7 +2620,7 @@ bool globalflag = false;
     
     else
     {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
+      
       return false;
     }
   }
@@ -2707,9 +2628,7 @@ bool globalflag = false;
 
   bool default_st()
   {
-    
-    //if ((*curr)->cp == "default" || (*curr)->cp == "}")
-    
+   
       if ((*curr)->cp == "default")
       {
         (*curr) = (*curr)->next;
@@ -2728,25 +2647,25 @@ bool globalflag = false;
               }
               else
               {
-                // cout << "Error syntax at: " << (*curr)->cp << endl;
+                
                 return false;
               }
             }
             else
             {
-              // cout << "Error syntax at: " << (*curr)->cp << endl;
+              
               return false;
             }
           }
           else
           {
-            // cout << "Error syntax at: " << (*curr)->cp << endl;
+            
             return false;
           }
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
@@ -2795,61 +2714,61 @@ bool globalflag = false;
                       }
                       else
                       {
-                        // cout << "Error syntax at: " << (*curr)->cp << endl;
+                        
                         return false;
                       }
                     }
                     else
                     {
-                      // cout << "Error syntax at: " << (*curr)->cp << endl;
+                      
                       return false;
                     }
                   }
                   else
                   {
-                    // cout << "Error syntax at: " << (*curr)->cp << endl;
+                    
                     return false;
                   }
                 }
                 else
                 {
-                  // cout << "Error syntax at: " << (*curr)->cp << endl;
+                  
                   return false;
                 }
               }
               else
               {
-                // cout << "Error syntax at: " << (*curr)->cp << endl;
+                
                 return false;
               }
             }
             else
             {
-              // cout << "Error syntax at: " << (*curr)->cp << endl;
+              
               return false;
             }
           }
           else
           {
-            // cout << "Error syntax at: " << (*curr)->cp << endl;
+            
             return false;
           }
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
       else
       {
-        // cout << "Error syntax at: " << (*curr)->cp << endl;
+        
         return false;
       }
     }
     else
     {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
+      
       return false;
     }
   }
@@ -2857,8 +2776,7 @@ bool globalflag = false;
   bool C1()
   {
     
-   // if ((*curr)->cp == "DT" || (*curr)->cp == "ID" || (*curr)->cp == ";")
-    
+  
       if ((*curr)->cp == "DT")
       {
         (*curr) = (*curr)->next;
@@ -2871,13 +2789,13 @@ bool globalflag = false;
           }
           else
           {
-            // cout << "Error syntax at: " << (*curr)->cp << endl;
+            
             return false;
           }
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
@@ -2890,7 +2808,7 @@ bool globalflag = false;
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
@@ -2903,7 +2821,7 @@ bool globalflag = false;
 
     else
     {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
+      
       return false;
     }
   }
@@ -2912,11 +2830,9 @@ bool globalflag = false;
   bool C2()
   {
     
-   // if ((*curr)->cp == "intconst" || (*curr)->cp == "(" || (*curr)->cp == ";" || (*curr)->cp == "ID" || (*curr)->cp == "!")
-    
+  
       if (OE())
       {
-        //(*curr) = (*curr)->next;
         return true;
       }
       else if( (*curr)->cp == ";" )
@@ -2926,7 +2842,7 @@ bool globalflag = false;
     
     else
     {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
+      
       return false;
     }
   }
@@ -2934,8 +2850,7 @@ bool globalflag = false;
   bool C3()
   {
     
-   // if ((*curr)->cp == "ID" || (*curr)->cp == ")" || (*curr)->cp == "uniary")
-    
+  
       if ((*curr)->cp == "ID")
       {
         (*curr) = (*curr)->next;
@@ -2945,7 +2860,7 @@ bool globalflag = false;
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
@@ -2961,7 +2876,7 @@ bool globalflag = false;
       }
     else
     {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
+      
       return false;
     }
   }
@@ -2970,8 +2885,7 @@ bool globalflag = false;
   bool X11()
   {
     
-    //if ((*curr)->cp == "AOP" || (*curr)->cp == "uniary")
-    
+   
       if (ass_st1()) 
       {
         return true;
@@ -2983,15 +2897,12 @@ bool globalflag = false;
       }
       else
       {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
       return false;
       }
   }
 
   bool OE()
   {
-    
-    //if ((*curr)->cp == "intconst" || (*curr)->cp == "(" || (*curr)->cp == "!" || (*curr)->cp == "ID")
     
       if (AE())
       {
@@ -3001,22 +2912,17 @@ bool globalflag = false;
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
           return false;
         }
       }
       else
       {
-        // cout << "Error syntax at: " << (*curr)->cp << endl;
         return false;
       }
   }
 
   bool AE()
   {
-
-    
-   // if ((*curr)->cp == "intconst" || (*curr)->cp == "(" || (*curr)->cp == "!" || (*curr)->cp == "ID")
     
       if (RE())
       {
@@ -3026,13 +2932,11 @@ bool globalflag = false;
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
           return false;
         }
       }
       else
       {
-        // cout << "Error syntax at: " << (*curr)->cp << endl;
         return false;
       }
   }
@@ -3040,15 +2944,15 @@ bool globalflag = false;
   bool OEE()
   {
 
-    
-   // if ((*curr)->cp == "||" || (*curr)->cp == "," || (*curr)->cp == ")"||(*curr)->cp == ";"||(*curr)->cp == "}"||(*curr)->cp == "AOP"||(*curr)->cp == "]"||(*curr)->cp == ":"||(*curr)->cp == "intconst")
-    
       if ((*curr)->cp == "||")
       {
+        globalLeftType = Type; //temp save from F type
+        globalOperator =  (*curr)->vp; //operator save
         (*curr) = (*curr)->next;
         if (AE())
         {
-
+          globalRightType = Type;
+          Type = compatibilityCheck(globalLeftType , globalRightType , "" , globalOperator); 
           if(OEE())
           {
             return true;
@@ -3062,19 +2966,19 @@ bool globalflag = false;
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
 
       else if ( (*curr)->cp == "," || (*curr)->cp == ")"||(*curr)->cp == ";"||(*curr)->cp == "}"||(*curr)->cp == "AOP"||(*curr)->cp == "]"||(*curr)->cp == ":" )
       {
-        // cout << "Error syntax at: " << (*curr)->cp << endl;
+        
         return true;
       }
     else
     {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
+      
       return false;
     }
   }
@@ -3084,8 +2988,6 @@ bool globalflag = false;
   {
 
     
-   // if ((*curr)->cp == "intconst" || (*curr)->cp == "(" || (*curr)->cp == "!" || (*curr)->cp == "ID")
-    
     if (PE())
       {
         if (REE())
@@ -3094,13 +2996,13 @@ bool globalflag = false;
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
+          
           return false;
         }
       }
       else
       {
-        // cout << "Error syntax at: " << (*curr)->cp << endl;
+        
         return false;
       }
   }
@@ -3108,8 +3010,6 @@ bool globalflag = false;
   bool PE()
   {
 
-    
-    //if ((*curr)->cp == "intconst" || (*curr)->cp == "(" || (*curr)->cp == "!" || (*curr)->cp == "ID")
     
       if (ME())
       {
@@ -3119,23 +3019,18 @@ bool globalflag = false;
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
           return false;
         }
       }
       else
       {
-        // cout << "Error syntax at: " << (*curr)->cp << endl;
+
         return false;
       }
   }
 
   bool ME()
   {
-
-    
-    //if ((*curr)->cp == "intconst" || (*curr)->cp == "(" || (*curr)->cp == "!" || (*curr)->cp == "ID")
-    
       if (F())
       {
         if (MEE())
@@ -3144,28 +3039,26 @@ bool globalflag = false;
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
           return false;
         }
       }
       else
       {
-        // cout << "Error syntax at: " << (*curr)->cp << endl;
         return false;
       }
   }
 
   bool F()
   {
-
-    
-    //if ((*curr)->cp == "intconst" || (*curr)->cp == "(" || (*curr)->cp == "!" || (*curr)->cp == "ID")
     
       if ((*curr)->cp == "intconst" || (*curr)->cp == "floatconst" || (*curr)->cp == "Charconst"  || (*curr)->cp == "boolconst" || (*curr)->cp == "stringconst")
       {
+        Type = (*curr)->cp ;//return type of constant ie int const float const etc
+
          (*curr) = (*curr)->next;
           return true;
       }
+
       else if ((*curr)->cp == "(")
       {
         (*curr) = (*curr)->next;
@@ -3201,6 +3094,10 @@ bool globalflag = false;
 
       else if ((*curr)->cp == "ID")
       {
+         tempvar = (*curr)->vp; //left type of operator 
+         globalLeftType = STobj.lookupST(tempvar , STstart);
+
+
         (*curr) = (*curr)->next;
         if (XOE1())
         {  
@@ -3222,79 +3119,62 @@ bool globalflag = false;
 
   bool XOE1()
   {
-    
-
-   // if ((*curr)->cp == "[" || (*curr)->cp == "intconst" || (*curr)->cp == "(" || (*curr)->cp == "!" || (*curr)->cp == "ID"||(*curr)->cp == "ROP"||(*curr)->cp == "||"||(*curr)->cp == "&&"||(*curr)->cp == "PM"||(*curr)->cp == "MDM")
-    
       if (fn_call1())
       {
         return true;
       }
 
-      // else if (array())
-       //{
-        else if (nt2())
-        {
-          // if ((*curr)->cp == "uniary")
-          // {
-          //   (*curr) = (*curr)->next;
+      else if (nt2())
+      {
              return true;
-          // }
-          // else
-          // {
-          //   // cout << "Error syntax at: " << (*curr)->cp << endl;
-          //   return false;
-          // }
-        }
-        // else
-        // {
-        //   // cout << "Error syntax at: " << (*curr)->cp << endl;
-        //   return false;
-        // }
-      //}
+      }
+
       else if( (*curr)->cp == "," || (*curr)->cp == ")"|| (*curr)->cp == ";" ||(*curr)->cp == "}"||(*curr)->cp == "AOP"||(*curr)->cp == "]"||(*curr)->cp == ":"  ||(*curr)->cp == "||" ||(*curr)->cp == "&&" ||(*curr)->cp == "ROP" ||(*curr)->cp == "MDM" ||(*curr)->cp == "PM" )
       {
+        if(globalflag == false)
+        {
+          Type = STobj.lookupST(tempvar , STstart);
+        }
+        globalflag = false;
         return true;
       }
+
     else
     {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
       return false;
     }
   }
 
   bool nt2()
-  {
-    
-    //if ((*curr)->cp == "." || (*curr)->cp == "uniary")
-    
+  { 
       if ((*curr)->cp == ".")
       {
+        //globalLeftType = STobj.lookupST(tempvar , STstart);
+        cout<<"           Temp var: "<<tempvar<<endl;
+        globalOperator = (*curr)->vp;
+
         (*curr) = (*curr)->next;
         if ((*curr)->cp == "ID")
         {
+          globalRightType = (*curr)->vp;
+          Type = compatibilityCheck(globalLeftType , globalRightType,"",globalOperator);
+          globalLeftType = Type;
+         // globalLeftType = Type;
+          cout<<"      Type dot : "<< Type <<endl<<endl;
+          globalflag = true;
+
           (*curr) = (*curr)->next;
-          //if (array())
-          //{
             if (XOE1())
             {
               return true;
             }
             else
             {
-              // cout << "Error syntax at: " << (*curr)->cp << endl;
               return false;
             }
-          //}
-          //else
-          //{
-            // cout << "Error syntax at: " << (*curr)->cp << endl;
-           // return false;
-          //}
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
           return false;
         }
       }
@@ -3306,28 +3186,28 @@ bool globalflag = false;
     
     else
     {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
       return false;
     }
   }
 
   bool AEE()
   {
-    
-   // if ((*curr)->cp == "&&"||(*curr)->cp == "||" || (*curr)->cp == "," || (*curr)->cp == ")"||(*curr)->cp == ";"||(*curr)->cp == "}"||(*curr)->cp == "AOP"||(*curr)->cp == "]"||(*curr)->cp == ":"||(*curr)->cp == "intconst")
-    
+       
       if ((*curr)->cp == "&&")
       {
+        globalLeftType = Type; //temp save from F type
+        globalOperator =  (*curr)->vp; //operator save
         (*curr) = (*curr)->next;
         if (RE())
         {
+          globalRightType = Type;
+          Type = compatibilityCheck(globalLeftType , globalRightType , "" , globalOperator); 
           if (AEE())
           {
             return true;
           }
           else
           {
-            // cout << "Error syntax at: " << (*curr)->cp << endl;
             return false;
           }
         }
@@ -3345,7 +3225,6 @@ bool globalflag = false;
     
     else
     {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
       return false;
     }
   }
@@ -3354,20 +3233,22 @@ bool globalflag = false;
   bool PEE()
   {
     
-   // if ( (*curr)->cp == "PM"||(*curr)->cp == "ROP" ||(*curr)->cp == "&&"||(*curr)->cp == "||" || (*curr)->cp == "," || (*curr)->cp == ")"||(*curr)->cp == ";"||(*curr)->cp == "}"||(*curr)->cp == "AOP"||(*curr)->cp == "]"||(*curr)->cp == ":"||(*curr)->cp == "intconst")
-    
       if ((*curr)->cp == "PM")
       {
+        globalLeftType = Type; //temp save from F type
+        globalOperator =  (*curr)->vp; //operator save
+
         (*curr) = (*curr)->next;
         if (ME())
         {
+          globalRightType = Type;
+          Type = compatibilityCheck(globalLeftType , globalRightType , "" , globalOperator);
           if (PEE())
           {
             return true;
           }
           else
           {
-            // cout << "Error syntax at: " << (*curr)->cp << endl;
             return false;
           }
         }
@@ -3383,7 +3264,6 @@ bool globalflag = false;
     
     else
     {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
       return false;
     }
   }
@@ -3392,20 +3272,23 @@ bool globalflag = false;
   bool MEE()
   {
     
-  //  if ( (*curr)->cp == "MDM"||(*curr)->cp == "PM"||(*curr)->cp == "ROP" ||(*curr)->cp == "&&"||(*curr)->cp == "||" || (*curr)->cp == "," || (*curr)->cp == ")"||(*curr)->cp == ";"||(*curr)->cp == "}"||(*curr)->cp == "AOP"||(*curr)->cp == "]"||(*curr)->cp == ":"||(*curr)->cp == "intconst")
-    
       if ((*curr)->cp == "MDM")
       {
+        globalLeftType = Type; //temp save from F type
+        globalOperator =  (*curr)->vp; //operator save
+
         (*curr) = (*curr)->next;
         if (F())
         {
+          globalRightType = Type;
+          Type = compatibilityCheck(globalLeftType , globalRightType , "" , globalOperator); 
+
           if (MEE())
           {
             return true;
           }
           else
           {
-            // cout << "Error syntax at: " << (*curr)->cp << endl;
             return false;
           }
         }
@@ -3421,7 +3304,6 @@ bool globalflag = false;
     
     else
     {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
       return false;
     }
   }
@@ -3430,20 +3312,22 @@ bool globalflag = false;
   bool REE()
   {
     
-   // if ((*curr)->cp == "ROP" ||(*curr)->cp == "&&"||(*curr)->cp == "||" || (*curr)->cp == "," || (*curr)->cp == ")"||(*curr)->cp == ";"||(*curr)->cp == "}"||(*curr)->cp == "AOP"||(*curr)->cp == "]"||(*curr)->cp == ":"||(*curr)->cp == "intconst")
-    
       if ((*curr)->cp == "ROP")
       {
+        globalLeftType = Type; //temp save from F type
+        globalOperator =  (*curr)->vp; //operator save
+
         (*curr) = (*curr)->next;
         if (PE())
         {
+          globalRightType = Type;
+          Type = compatibilityCheck(globalLeftType , globalRightType , "" , globalOperator); 
           if (REE())
           {
             return true;
           }
           else
           {
-            // cout << "Error syntax at: " << (*curr)->cp << endl;
             return false;
           }
         }
@@ -3459,74 +3343,76 @@ bool globalflag = false;
     
     else
     {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
       return false;
     }
   }
 
 
-
-
-
-
-/*string compatibilityCheck(string leftType , string rightType ,string paralist ,string Operator) //paralist for fn
+string compatibilityCheck(string leftType , string rightType ,string paralist ,string Operator) 
 {
-  if(leftType == "intconst" && rightType == "intconst" && (Operator == "+" || Operator == "-" || Operator == "*" || Operator == "/" || Operator == "%" || Operator == "<" || Operator == ">" || Operator == "<=" || Operator == ">=" || Operator == "!=" || Operator == "==" || Operator == "=" ||  Operator == "+=" || Operator == "-=" || Operator == "*=" || Operator == "/=" || Operator == "%=" ))
+  if( (leftType == "int" && rightType == "int") && (Operator == "+" || Operator == "-" || Operator == "*" || Operator == "/" || Operator == "%" || Operator == "<" || Operator == ">" || Operator == "<=" || Operator == ">=" || Operator == "!=" || Operator == "==" || Operator == "=" ||  Operator == "+=" || Operator == "-=" || Operator == "*=" || Operator == "/=" || Operator == "%=" ) )
   {
-    return "intconst";
+    return "int";
   }
-  else if( ((leftType == "intconst" && rightType == "floatconst")  || (leftType == "floatconst" && rightType == "intconst") || (leftType == "floatconst" && rightType == "floatconst") )  &&  ( Operator == "+" || Operator == "-" || Operator == "*" || Operator == "/" || Operator == "%" || Operator == "<" || Operator == ">" || Operator == "<=" || Operator == ">=" || Operator == "!=" || Operator == "==" || Operator == "=" ||  Operator == "+=" || Operator == "-=" || Operator == "*=" || Operator == "/=" || Operator == "%=" ) )
+  else if( ((leftType == "int" && rightType == "float")  || (leftType == "float" && rightType == "int") || (leftType == "float" && rightType == "float") )  &&  ( Operator == "+" || Operator == "-" || Operator == "*" || Operator == "/" || Operator == "%" || Operator == "<" || Operator == ">" || Operator == "<=" || Operator == ">=" || Operator == "!=" || Operator == "==" || Operator == "=" ||  Operator == "+=" || Operator == "-=" || Operator == "*=" || Operator == "/=" || Operator == "%=" ) )
   {
-    return "floatconst";
+    return "float";
   }
-  else if( leftType == "stringconst" && rightType == "stringconst" && (Operator == "+" || Operator=="+=" || Operator=="="  || Operator == "<" || Operator == ">" || Operator == "<=" || Operator == ">=" || Operator == "!=" || Operator == "==" ) )
+  else if( (leftType == "string" && rightType == "string") && (Operator == "+" || Operator=="+=" || Operator=="="  || Operator == "<" || Operator == ">" || Operator == "<=" || Operator == ">=" || Operator == "!=" || Operator == "==" ) )
   {
-    return "stringconst";
+    return "string";
   }
-  else if( leftType == "boolconst" && rightType == "boolconst"  && ( Operator=="="  || Operator == "<" || Operator == ">" || Operator == "<=" || Operator == ">=" || Operator == "!=" || Operator == "=="  )  )
+  else if( leftType == "bool" && rightType == "bool"  && ( Operator=="="  || Operator == "<" || Operator == ">" || Operator == "<=" || Operator == ">=" || Operator == "!=" || Operator == "=="  )  )
   {
-    return "boolconst";
+    return "bool";
   }
-  else if( leftType == "Charconst" && rightType == "Charconst"  && ( Operator=="="  || Operator == "<" || Operator == ">" || Operator == "<=" || Operator == ">=" || Operator == "!=" || Operator == "=="  )  )
+  else if( leftType == "char" && rightType == "char"  && ( Operator=="="  || Operator == "<" || Operator == ">" || Operator == "<=" || Operator == ">=" || Operator == "!=" || Operator == "=="  )  )
   {
-    return "Charconst";
+    return "char";
   }
+
   else if(Operator == ".")
   {
-    DataTable DTobj,DTtemp;
-    clasDT CDTobj,CDTtemp;
+    DataTable *DTtemp;
+    string CDTtemp;
     DTtemp = DTobj.retAddress(leftType , DTstart);
-    CDTtemp = CDTobj.lookupCDT(rightType , DTtemp.Ref);
-    functionTable fntable;
-    string fntype = fntable.lookupFn(rightType , paralist , leftType ,FNstart);
-    if(CDTtemp != "NULL") //for atribute a.b
+    if(DTtemp != NULL)
     {
-      return CDTtemp;
-    }
-    else if(fntype != "NULL") //for fucntion a.b()
-    {
-      return fntype;
-    }
-    else if(DTtemp->Parent != NULL) //for attributes in parent
-    {
+      CDTtemp = classDTobj.lookupCDT(rightType , DTtemp->Ref); //if right side is the attribute of class
+      string fntype = Fnobj.lookupFn(rightType , paralist , leftType ,FNstart); //if its a function
+      if(CDTtemp != "NULL") //for atribute a.b
+      {
+       return CDTtemp;
+      }
+      else if(fntype != "NULL") //for fucntion a.b()
+      {
+       return fntype;
+      }
+      else if(DTtemp->Parent != NULL) //for attributes in parent
+      {
       string temp = DTtemp->Parent->Name;
-      return compatibilityCheck(temp , rightType ,".");
+      return compatibilityCheck(temp , rightType , paralist ,".");
+      }
+      else
+      {
+        cout<<"               class undecleared!! "<<endl;
+        return "NULL";
+      }
     }
     else
     {
       cout<<"Not compatible (at chk comp fn)"<<endl;
       return "NULL";
     }
-    
 
   }
-  else
-  {
-    cout<<"Not compatible (at chk comp fn)"<<endl;
+    else
+    {
+      cout<<"Not compatible (at chk comp fn)"<<endl;
       return "NULL";
-  }
+    }
   
-}*/
+}
 
 
 

@@ -65,7 +65,7 @@ DataTable* retAddress(string name , DataTable *start) //return curr address
 
   if(start == NULL)
   {
-    cout<<"CLASS NOT DECLEARED !!"<<endl;
+    cout<<"CLASS NOT DECLEARED AT DATA TABLE!!"<<endl;
     return NULL;
   }
   else
@@ -89,7 +89,7 @@ DataTable* retAddress(string name , DataTable *start) //return curr address
       }
       else
       {
-        cout<<"CLASS NOT DECLEARED !!"<<endl;
+        cout<<"CLASS NOT DECLEARED AT DATA TABLE!!"<<endl;
         return NULL;
       }
       

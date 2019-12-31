@@ -260,11 +260,6 @@ public:
         settoken.lineno = this->lineno;
 
         list.insert(cp,vp,lineno,&start);
-
-        // cout<<" Token set cp : "<<settoken.cp;
-        // cout<<" Token set vp : "<<settoken.vp;
-        // cout<<" Token set lineno : "<<settoken.lineno<<endl;
-     // cout << " CP : " << this->cp << "  VP : " << this->vp << "  Line no:  " << this->lineno << endl;
     }
 
     else if (checkpunc(word) || word == "&&" || word == "||")
@@ -276,11 +271,6 @@ public:
         settoken.lineno = this->lineno;
 
         list.insert(cp,vp,lineno,&start);
-
-        // cout<<" Token set cp : "<<settoken.cp;
-        // cout<<" Token set vp : "<<settoken.vp;
-        // cout<<" Token set lineno : "<<settoken.lineno<<endl;
-      //cout << " CP : " << this->cp << "  VP : " << this->vp << "  Line no:  " << this->lineno << endl;
     }
 
     else if (checkPM(word))
@@ -292,15 +282,10 @@ public:
         settoken.lineno = this->lineno;
 
         list.insert(cp,vp,lineno,&start);
-
-        // cout<<" Token set cp : "<<settoken.cp;
-        // cout<<" Token set vp : "<<settoken.vp;
-        // cout<<" Token set lineno : "<<settoken.lineno<<endl;
-     // cout << " CP : " << this->cp << "  VP : " << this->vp << "  Line no:  " << this->lineno << endl;
     }
     else if (checkndm(word))
     {
-      this->cp = "NDM";
+      this->cp = "MDM";
       this->vp = word;
       settoken.cp = this->cp;
         settoken.vp = this->vp;
@@ -377,11 +362,11 @@ public:
        //syntaxAnalyzer syntax;
 
        //syntax.Analyzer(&start);
-      //  cout<<"Tokens : "<<endl<<endl; for printing tokens
+      //  cout<<"Tokens : "<<endl<<endl; //for printing tokens
       //  list.print(&start);
 
       // cout<<list.start(&start);
-      cout<<endl<<endl<<"Syntax Analyzer :"<<endl<<endl;
+      cout<<"***************SYNTAX ANALYZER************** "<<endl<<endl;
        bool check = true;
        check = list.start(&start);
        cout<< check <<endl; 
