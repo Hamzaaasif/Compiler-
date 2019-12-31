@@ -65,7 +65,7 @@ DataTable* retAddress(string name , DataTable *start) //return curr address
 
   if(start == NULL)
   {
-    cout<<"Not declared"<<endl;
+    cout<<"CLASS NOT DECLEARED !!"<<endl;
     return NULL;
   }
   else
@@ -84,12 +84,12 @@ DataTable* retAddress(string name , DataTable *start) //return curr address
 
     if(curr->Name == name)
       {
-        cout<<"Name : " <<curr->Name<<" Type: "<<curr->Type<<" (at DT) "<<endl;
+        cout<<"Name : " <<curr->Name<<"  Type: "<<curr->Type<<" (at DT) "<<endl;
         return curr;
       }
       else
       {
-        cout<<"Undecleared"<<endl;
+        cout<<"CLASS NOT DECLEARED !!"<<endl;
         return NULL;
       }
       
@@ -113,17 +113,17 @@ void print(DataTable *start)
       {
         cout<<curr->Name<<"   ";
         cout<<curr->Type<<"   ";
-        cout<<curr->Parent<<"   "<<endl<<endl;
+        cout<<curr->Parent<<"   "<<endl;
 
-        cout<<"Class Data Table: "<<endl;
+        cout<<"Class Data Table of class : "<<curr->Name<<endl;
         cdtobj.print(curr->Ref);
         cout<<endl;
         curr=curr->next;
       }
         cout<<curr->Name<<"   ";
         cout<<curr->Type<<"   ";
-        cout<<curr->Parent<<"   "<<endl<<endl;
-        cout<<"Class Data Table: "<<endl;
+        cout<<curr->Parent<<"   "<<endl;
+        cout<<"Class Data Table of class : "<<curr->Name<<endl;
         cdtobj.print(curr->Ref);
         cout<<endl;
     }

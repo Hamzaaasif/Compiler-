@@ -1,33 +1,32 @@
 class a
 {
-  float p;
-  int  sum(int para)
+  point m;
+  a(int sum , vector v)
   {
-    point p;
-  }
-  vector sum(float a )
-  {
-    
+    int a;
+    float b;
   }
 };
+
 class b 
 {
-  point p;
-  string s;
-  vector sum(float a )
+  b(point p , float a)
   {
-    float p;
-    int sum;
-    flaot summmmm;
-    string s;
+
   }
 };
-vacant sum()
-{
 
-}
+class c : private a
+{
+  c(int a , float b)
+  {
+
+  }
+  
+};
+
+
 void main()
 {
-  float point;
-  int name,type;
+
 }$

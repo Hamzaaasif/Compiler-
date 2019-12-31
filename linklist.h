@@ -39,7 +39,7 @@ bool globalflag = false;
   clasDT *CDTRef = NULL;
   clasDT classDTobj;
   string globalTM ="";
-  string globalAM = "";
+  string globalAM = "private";
 
   void insert(string cp, string vp, int lineno, linklist **start)
   {
@@ -315,6 +315,8 @@ bool globalflag = false;
         globalclassname = (*curr)->vp; //class name saved
 
         (*curr) = (*curr)->next;
+         parent = NULL;
+
         if (check_inh())
         {
           if ((*curr)->cp == "{")
@@ -334,6 +336,7 @@ bool globalflag = false;
                   DTtemp->Ref = CDTRef;
                   CDTRef = NULL;
                   globalclassname = "Global";
+                  globalTM = "";
                   (*curr) = (*curr)->next;
                   return true;
                 }
@@ -444,6 +447,7 @@ bool globalflag = false;
 
       else if ((*curr)->cp == "public" || (*curr)->cp == "private")
       {
+        globalAM =  (*curr)->vp;
         (*curr) = (*curr)->next;
         if ((*curr)->cp == ":")
         {
@@ -475,7 +479,10 @@ bool globalflag = false;
             (*curr) = (*curr)->next;
             if (fun_dec())
             {
-              return true;
+              if(class_body())
+              {
+                return true;
+              }
             }
             else
             {
@@ -514,12 +521,12 @@ bool globalflag = false;
     
     if ((*curr)->cp == "virtual"  || (*curr)->cp == "static" || (*curr)->cp == "const")
     {
+      globalTM = (*curr)->vp;
       (*curr) = (*curr)->next;
       return true;
     }
     else
     {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
       return false;
     }
 
@@ -529,7 +536,6 @@ bool globalflag = false;
   bool X1()
   {
     
-    //if ((*curr)->cp == "(" || (*curr)->cp == "ID")
       if ((*curr)->cp == "ID") 
       {
         globalname = (*curr)->vp; //name
@@ -541,7 +547,6 @@ bool globalflag = false;
         }
         else  
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
           return false;
         }
       }
@@ -553,7 +558,6 @@ bool globalflag = false;
 
     else
     {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
       return false;
     }
   }
@@ -565,30 +569,32 @@ bool globalflag = false;
     if ((*curr)->cp == "(")
     {
 
+      DataTable *DTtemp = DTobj.retAddress(globaltype , DTstart) ;
       (*curr) = (*curr)->next;
       if (para())
       {
+        if(DTtemp != NULL &&  DTtemp->Name == globalclassname )
+      {
+        Fnobj.insertfn(globalclassname, "void" , globalparalist , globalclassname , &FNstart);
+      }
+      else
+      {
+        cout<<" CLASS NOT DEFINED CONSTRUCTOR NOT ALLOWED !!"<<endl;
+      }
+
         if ((*curr)->cp == ")")
         {
           (*curr) = (*curr)->next;
           if ((*curr)->cp == "{")
           {
+            globalflag = false;
             (*curr) = (*curr)->next;
             if (MST())
             {
               if ((*curr)->cp == "}")
               {
                 (*curr) = (*curr)->next;
-                // if((*curr)->cp == ";")
-                // {
-                //   (*curr) = (*curr)->next;
                    return true;
-                // }
-                // else
-                // {
-                //   return false;
-                // }
-                 
               }
               else
               {
@@ -622,7 +628,6 @@ bool globalflag = false;
 
     else
     {
-      // cout << "Error syntax at: " << (*curr)->cp << endl;
       return false;
     }
   }
@@ -660,7 +665,7 @@ bool globalflag = false;
 
   bool X3()
   {
-    
+    globalflag = true;
       if ((*curr)->cp == "(")
       {
         
@@ -727,8 +732,7 @@ bool globalflag = false;
   
   bool X()
   {
-    
-    // if ((*curr)->cp == "[" || (*curr)->cp == "=" || (*curr)->cp == ";" || (*curr)->cp == "(" || (*curr)->cp == ",")
+    globalflag = false;
 
       if (obj_dec())
       {
@@ -809,14 +813,16 @@ bool globalflag = false;
   bool type()
   {
     
-    // if ((*curr)->cp == "ID" || (*curr)->cp == "DT")
-    // {
 
       if ((*curr)->cp == "ID")
       {
+        globaltype =(*curr)->vp;//type
+
         (*curr) = (*curr)->next;
         if ((*curr)->cp == "ID")
         {
+          globalname =(*curr)->vp; //name
+
           (*curr) = (*curr)->next;
           return true;
         }
@@ -829,9 +835,12 @@ bool globalflag = false;
 
       else if ((*curr)->cp == "DT")
       {
+        globaltype = (*curr)->vp; //type
+
         (*curr) = (*curr)->next;
         if ((*curr)->cp == "ID")
         {
+          globalname =(*curr)->vp; //name
           (*curr) = (*curr)->next;
           return true;
         }
@@ -1028,6 +1037,15 @@ bool globalflag = false;
           (*curr) = (*curr)->next;
           if ((*curr)->cp == "ID")
           {
+            DataTable *DTtemp = DTobj.retAddress((*curr)->vp , DTstart);
+            if(DTtemp != NULL)
+            {
+              parent = DTtemp;
+            }
+            // else
+            // {
+            //   cout<<"INHERITANCE NOT ALLOWED !! "<<endl;
+            // }
             (*curr) = (*curr)->next;
             return true;
           }
@@ -1140,9 +1158,6 @@ bool globalflag = false;
   bool SST()
   {
     
-    // if ((*curr)->cp == "if" || (*curr)->cp == "while" || (*curr)->cp == "switch" || (*curr)->cp == "for" || (*curr)->cp == "return" || (*curr)->cp == "continue" || (*curr)->cp == "break" || (*curr)->cp == "ID" || (*curr)->cp == "DT")
-
-
       if (if_else())
       {
         return true;
@@ -1169,11 +1184,11 @@ bool globalflag = false;
         (*curr) = (*curr)->next;
         if ((*curr)->cp == ";")
         {
+          (*curr) = (*curr)->next;
           return true;
         }
         else
         {
-          // cout << "Error syntax at: " << (*curr)->cp << endl;
           return false;
         }
       }
@@ -1183,6 +1198,7 @@ bool globalflag = false;
         (*curr) = (*curr)->next;
         if ((*curr)->cp == ";")
         {
+          (*curr) = (*curr)->next;
           return true;
         }
         else
@@ -1210,6 +1226,7 @@ bool globalflag = false;
 
       else if ((*curr)->cp == "DT")
       {
+        globalflag = false;
         globaltype = (*curr)->vp; //Type
         cout<<"Type at SST: "<<(*curr)->vp<<endl;
 
@@ -1631,7 +1648,7 @@ bool globalflag = false;
 
       else if ((*curr)->cp == ";")
       {
-        if(!globalflag)
+        if(globalflag == false)
         {
           cout<<"Inserting in symbol Table : "<<STobj.insertST(globalname , globaltype , globalcurrScope , &STstart)<<endl; //inserting in symbol table
         }
@@ -1734,7 +1751,7 @@ bool globalflag = false;
 
       if ((*curr)->cp == ",")
       {
-        if(globalclassname == "Global")
+        if(globalflag == false)
         {
           cout<<"Inserting in symbol Table : "<<STobj.insertST(globalname , globaltype , globalcurrScope , &STstart)<<endl; //inserting in symbol table
         }
@@ -1753,7 +1770,7 @@ bool globalflag = false;
           if((*curr)->cp != ";")
           {
 
-              if(globalclassname == "Global")
+              if(globalflag == false)
                 {
                  cout<<"Inserting in symbol Table : "<<STobj.insertST(globalname , globaltype , globalcurrScope , &STstart)<<endl; //inserting in symbol table
                 }
@@ -1799,7 +1816,7 @@ bool globalflag = false;
       
       else if ((*curr)->cp == ";")
       {
-        if(globalclassname == "Global")
+        if(globalflag == false)
             {
              cout<<"Inserting in symbol Table : "<<STobj.insertST(globalname , globaltype , globalcurrScope , &STstart)<<endl; //inserting in symbol table
             }

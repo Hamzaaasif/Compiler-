@@ -98,16 +98,16 @@ string lookupCDT(string name , clasDT *start ) // type return kryga
       clasDT *curr=start;
       while(curr->next!=NULL)
       {
-        cout<<curr->Name<<"   ";
-        cout<<curr->Type<<"   ";
-        cout<<curr->AM<<"   ";
-        cout<<curr->TM<<"   "<<endl;
+        cout<<curr->Name<<"    ";
+        cout<<curr->Type<<"    ";
+        cout<<curr->AM<<"    ";
+        cout<<curr->TM<<"    "<<endl;
         curr=curr->next;
       }
-        cout<<curr->Name<<"   ";
-        cout<<curr->Type<<"   ";
-        cout<<curr->AM<<"   ";
-        cout<<curr->TM<<"   "<<endl;
+        cout<<curr->Name<<"    ";
+        cout<<curr->Type<<"    ";
+        cout<<curr->AM<<"    ";
+        cout<<curr->TM<<"    "<<endl;
     }
   }
   
