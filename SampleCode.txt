@@ -2,20 +2,18 @@ class vector
 {
   public:
   int a;
+  vector vec;
+  int sum(int a )
+  {
+  }
 };
-
 class point : public vector
 {
-  public:
-  vector vec;
-  int f;
 };
-
 point poi;
+vector vec;
 int temp;
-
-temp = poi.vec.a;
+temp = vec.sum(4);
 void main()
 {
-
 }$

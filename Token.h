@@ -183,27 +183,17 @@ public:
         settoken.lineno = this->lineno;
 
         list.insert(cp,vp,lineno,&start);
-
-        // cout<<" Token set cp : "<<settoken.cp;
-        // cout<<" Token set vp : "<<settoken.vp;
-        // cout<<" Token set lineno : "<<settoken.lineno<<endl;
-       // cout << " CP : " << this->cp << "  VP : " << this->vp << "  Line no:  " << this->lineno << endl;
       }
 
       else if (word == "true" || word == "false")
       {
-        this->cp = "boolconst";
+        this->cp = "bool";
         this->vp = word;
         settoken.cp = this->cp;
         settoken.vp = this->vp;
         settoken.lineno = this->lineno;
 
         list.insert(cp,vp,lineno,&start);
-
-        // cout<<" Token set cp : "<<settoken.cp;
-        // cout<<" Token set vp : "<<settoken.vp;
-        // cout<<" Token set lineno : "<<settoken.lineno<<endl;
-        //cout << " CP : " << this->cp << "  VP : " << this->vp << "  Line no:  " << this->lineno << endl;
       }
 
       else
@@ -216,44 +206,30 @@ public:
 
         list.insert(cp,vp,lineno,&start);
 
-        // cout<<" Token set cp : "<<settoken.cp;
-        // cout<<" Token set vp : "<<settoken.vp;
-        // cout<<" Token set lineno : "<<settoken.lineno<<endl;
-        //cout << " CP : " << this->cp << "  VP : " << this->vp << "  Line no:  " << this->lineno << endl;
       }
     }
     else if (isint)
     {
-      this->cp = "intconst";
+      this->cp = "int";
       this->vp = word;
       settoken.cp = this->cp;
       settoken.vp = this->vp;
       settoken.lineno = this->lineno;
       list.insert(cp,vp,lineno,&start);
-
-      // cout<<" Token set cp : "<<settoken.cp;
-      //   cout<<" Token set vp : "<<settoken.vp;
-      //   cout<<" Token set lineno : "<<settoken.lineno<<endl;
-      //cout << " CP : " << this->cp << "  VP : " << this->vp << "  Line no:  " << this->lineno << endl;
     }
     else if (isfloat)
     {
-      this->cp = "floatconst";
+      this->cp = "float";
       this->vp = word;
       settoken.cp = this->cp;
         settoken.vp = this->vp;
         settoken.lineno = this->lineno;
         list.insert(cp,vp,lineno,&start);
-
-        // cout<<" Token set cp : "<<settoken.cp;
-        // cout<<" Token set vp : "<<settoken.vp;
-        // cout<<" Token set lineno : "<<settoken.lineno<<endl;
-      //cout << "CP : " << cp << " VP : " << vp << endl;
     }
 
     else if (ischar)
     {
-      this->cp = "Charconst";
+      this->cp = "char";
       this->vp = word;
       settoken.cp = this->cp;
         settoken.vp = this->vp;
@@ -292,11 +268,6 @@ public:
         settoken.lineno = this->lineno;
 
         list.insert(cp,vp,lineno,&start);
-
-        // cout<<" Token set cp : "<<settoken.cp;
-        // cout<<" Token set vp : "<<settoken.vp;
-        // cout<<" Token set lineno : "<<settoken.lineno<<endl;
-     // cout << " CP : " << this->cp << "  VP : " << this->vp << "  Line no:  " << this->lineno << endl;
     }
     else if (checkROP(word))
     {
@@ -308,10 +279,7 @@ public:
 
         list.insert(cp,vp,lineno,&start);
 
-        // cout<<" Token set cp : "<<settoken.cp;
-        // cout<<" Token set vp : "<<settoken.vp;
-        // cout<<" Token set lineno : "<<settoken.lineno<<endl;
-     // cout << " CP : " << this->cp << "  VP : " << this->vp << "  Line no:  " << this->lineno << endl;
+
     }
     else if (checkAOP(word))
     {
@@ -322,7 +290,6 @@ public:
         settoken.lineno = this->lineno;
 
        list.insert(cp,vp,lineno,&start);
-      //cout << " CP : " << this->cp << "  VP : " << this->vp << "  Line no:  " << this->lineno << endl;
     }
     else if (checkuniary(word))
     {
@@ -333,21 +300,20 @@ public:
         settoken.lineno = this->lineno;
 
        list.insert(cp,vp,lineno,&start);
-    //  cout << " CP : " << this->cp << "  VP : " << this->vp << "  Line no:  " << this->lineno << endl;
+    
     }
     else if (word == " " || word == "\n")
     {
     }
     else if (word[0] == '\"' && word[(word.size() - 1)] == '\"')
     {
-      this->cp = "stringconst";
+      this->cp = "string";
       this->vp = word;
       settoken.cp = this->cp;
         settoken.vp = this->vp;
         settoken.lineno = this->lineno;
 
        list.insert(cp,vp,lineno,&start);
-     //cout << " CP : " << this->cp << "  VP : " << this->vp << "  Line no:  " << this->lineno << endl;
     }
      else if (word[0] == '$' )
     {

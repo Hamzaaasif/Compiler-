@@ -1510,7 +1510,7 @@ bool globalflag = false;
           return false;
         }
       }
-      else if ((*curr)->cp == "intconst" || (*curr)->cp == "floatconst" || (*curr)->cp == "boolconst" || (*curr)->cp == "stringconst" || (*curr)->cp == "Charconst")
+      else if ((*curr)->cp == "int" || (*curr)->cp == "float" || (*curr)->cp == "bool" || (*curr)->cp == "string" || (*curr)->cp == "char")
       {
         (*curr) = (*curr)->next;
         if (list())
@@ -1688,18 +1688,18 @@ bool globalflag = false;
 
   bool list2()
   {
-
+    DataTable* templist2 = DTobj.retAddress(globaltype , DTstart);
       if ((*curr)->cp == ",")
       {
-        if(globalflag == false)
+       // DataTable* templist2 = DTobj.retAddress(globaltype , DTstart);
+        if(globalflag == false && templist2 != NULL)
         {
          STobj.insertST(globalname , globaltype , globalcurrScope , &STstart); //inserting in symbol table
         }
-        else
+        else if(templist2 != NULL)
         {
           classDTobj.insertCDT(globalname , globaltype , globalAM , globalTM , &CDTRef);
-        }
-        
+        }        
 
         (*curr) = (*curr)->next;
         if ((*curr)->cp == "ID")
@@ -1709,11 +1709,12 @@ bool globalflag = false;
           if((*curr)->cp != ";")
           {
 
-              if(globalflag == false)
+              if(globalflag == false && templist2!=NULL)
                 {
+                  cout<<"";
                  STobj.insertST(globalname , globaltype , globalcurrScope , &STstart); //inserting in symbol table
                 }
-               else
+               else if(templist2 != NULL)
                   {
                     classDTobj.insertCDT(globalname , globaltype , globalAM , globalTM , &CDTRef);
                   }
@@ -1755,11 +1756,11 @@ bool globalflag = false;
       
       else if ((*curr)->cp == ";")
       {
-        if(globalflag == false)
+        if(globalflag == false && templist2 != NULL)
             {
              STobj.insertST(globalname , globaltype , globalcurrScope , &STstart); //inserting in symbol table
             }
-        else
+        else if(templist2 != NULL)
             {
                classDTobj.insertCDT(globalname , globaltype , globalAM , globalTM , &CDTRef);
             }
@@ -1942,17 +1943,26 @@ bool globalflag = false;
 
 
   bool fn_call1()
-  {
-     
-      //if (check_id())
-     // {
+  {  
+    
         if ((*curr)->cp == "(")
         {
+          string fnname = globalRightType;
+          string ope = globalOperator;
+          string classname = STobj.lookupST(tempvar , STstart); 
+          if(globalflag)
+          {
+            classname = Type;
+            globalflag = false;
+          }
+          cout<<"Function name = " <<fnname<<"         Class Name = "<<classname <<endl;
           (*curr) = (*curr)->next;
           if (arg())
           {
             if ((*curr)->cp == ")")
             {
+              Type = compatibilityCheck(classname , fnname , globalparalist , ope);
+              cout<<"Parameter list : "<<globalparalist<<endl<<"Compatible Type Of function : "<<Type<<endl;
               (*curr) = (*curr)->next;
               return true;
             }
@@ -2034,6 +2044,7 @@ bool globalflag = false;
     
       if (OE())
       {
+        globalparalist = Type+",";
         if (arg1())
         {
           return true;
@@ -2046,6 +2057,7 @@ bool globalflag = false;
       }
       else if( (*curr)->cp == ")" )
       {
+        globalparalist = "";
         return true;
       }
     else
@@ -2064,6 +2076,7 @@ bool globalflag = false;
         (*curr) = (*curr)->next;
         if (OE())
         {
+          globalparalist+=Type+",";
           if (arg1())
           {
             return true;
@@ -2092,7 +2105,9 @@ bool globalflag = false;
      
       if (array())
       {
-        if (L2())
+        if(L1())
+        {
+          if (L2())
         {
           return true;
         }
@@ -2101,6 +2116,12 @@ bool globalflag = false;
           
           return false;
         }
+        }
+        else
+        {
+          return false;
+        }
+        
       }
 
       else if ((*curr)->cp == "ID")
@@ -2126,6 +2147,36 @@ bool globalflag = false;
       }
   }
 
+  bool L1()
+  {
+    if((*curr)->cp == ".")
+    {
+    
+      (*curr) = (*curr)->next;
+      if((*curr)->cp == "ID")
+      {
+        (*curr) = (*curr)->next;
+        if(L1())
+        {
+         return true;
+        }
+      }
+      else
+      {
+        return false;
+      }
+      
+    }
+    else if((*curr)->cp == "." || (*curr)->cp == "(" || (*curr)->cp == "inc_dec" || (*curr)->cp == "AOP")
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+    
+  }
 
   bool L2()
   {
@@ -3051,7 +3102,7 @@ bool globalflag = false;
   bool F()
   {
     
-      if ((*curr)->cp == "intconst" || (*curr)->cp == "floatconst" || (*curr)->cp == "Charconst"  || (*curr)->cp == "boolconst" || (*curr)->cp == "stringconst")
+      if ((*curr)->cp == "int" || (*curr)->cp == "float" || (*curr)->cp == "char"  || (*curr)->cp == "bool" || (*curr)->cp == "string")
       {
         Type = (*curr)->cp ;//return type of constant ie int const float const etc
 
@@ -3096,6 +3147,7 @@ bool globalflag = false;
       {
          tempvar = (*curr)->vp; //left type of operator 
          globalLeftType = STobj.lookupST(tempvar , STstart);
+         globalflag = false;
 
 
         (*curr) = (*curr)->next;
@@ -3157,12 +3209,14 @@ bool globalflag = false;
         if ((*curr)->cp == "ID")
         {
           globalRightType = (*curr)->vp;
-          Type = compatibilityCheck(globalLeftType , globalRightType,"",globalOperator);
-          globalLeftType = Type;
-         // globalLeftType = Type;
-          cout<<"      Type dot : "<< Type <<endl<<endl;
-          globalflag = true;
-
+          if((*curr)->next->cp != "(" )
+          {
+            Type = compatibilityCheck(globalLeftType , globalRightType,"",globalOperator);
+            globalLeftType = Type;
+            cout<<"      Type dot : "<< Type <<endl<<endl;
+            globalflag = true;
+          }
+          
           (*curr) = (*curr)->next;
             if (XOE1())
             {
@@ -3395,7 +3449,7 @@ string compatibilityCheck(string leftType , string rightType ,string paralist ,s
       }
       else
       {
-        cout<<"               class undecleared!! "<<endl;
+        cout<<"               class undecleared!!   "<<endl;
         return "NULL";
       }
     }

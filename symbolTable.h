@@ -40,7 +40,6 @@ class symbolTable
           curr = curr->next;
           if(curr->Name == name  && curr->scope == scope)
            {
-            cout<<"Redeclaration error : "<<name<<"  "<<type<<endl;
             return false;
            }
         }
