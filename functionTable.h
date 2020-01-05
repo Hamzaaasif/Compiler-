@@ -32,7 +32,6 @@ class functionTable
         
         if(curr->Name == name && curr->ParaList == paralist && curr->ClassName == classname )
         {
-          cout<<"Redeclaration error Function already decleared: "<<name<<"  "<<retType << " "<< paralist <<endl;
           return false;
         }
         else
@@ -44,13 +43,11 @@ class functionTable
 
             if(curr->Name == name && curr->ParaList == paralist && curr->ClassName == classname)
               {
-              cout<<"Redeclaration error Function already decleared : "<<"Name: "<<name<<"  "<<"Return Type: "<<retType << " Para List: "<< paralist <<endl;
               return false;
               }
           }
 
           curr->next=ptr;
-          cout<<"Function Inserted !! "<<endl;
           return true;
 
         }

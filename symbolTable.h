@@ -29,7 +29,7 @@ class symbolTable
       symbolTable *curr = *start;
       if(curr->Name == name  && curr->scope == scope)
       {
-        cout<<"Redeclaration error: "<<name<<"  "<<type << endl;
+        cout<<"Error: Redeclaration "<<name<< endl;
         return false;
       }
       else
@@ -45,7 +45,6 @@ class symbolTable
         }
 
         curr->next=ptr;
-        cout<<"Inserted in Symbol Table"<<endl;
         return true;
       }
       
@@ -62,7 +61,6 @@ int createScope()
 
 int deleteScope()
 {
-  //intconst stacksize = scopeStack.size();
   scopeStack.pop();
   if(!scopeStack.empty())
   {
@@ -80,7 +78,7 @@ string lookupST(string name , symbolTable *start)
 {
   if(start == NULL)
   {
-    cout<<"Not declared"<<endl;
+    cout<<"Error: No defination found "<<endl;
     return "NULL";
   }
 
@@ -133,7 +131,7 @@ string lookupST(string name , symbolTable *start)
         }
         else
         {
-          cout<<"Not decleared "<<endl;
+          cout<<"Error: No defination found "<<endl;
           return "NULL";
         }
   
@@ -149,7 +147,7 @@ void printST(symbolTable *start)
   {
     if(start==NULL)
     {
-      cout<<"List is empty"<<endl;
+      cout<<"Table is empty"<<endl;
     }
     else
     {

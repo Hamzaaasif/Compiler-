@@ -94,7 +94,11 @@ bool globalflag = false;
               (*curr) = (*curr)->next;
               if (NV())
               {
-                Fnobj.insertfn (globalname , globalRetType , globalparalist , "Global" , &FNstart);
+                if(!Fnobj.insertfn (globalname , globalRetType , globalparalist , "Global" , &FNstart))
+                {
+                  cout<<"Error: Redeclaration "<<endl;
+                }
+                
 
                 if ((*curr)->cp == "{")
                 {
@@ -311,7 +315,10 @@ bool globalflag = false;
           if ((*curr)->cp == "{")
           {
             CDTRef = NULL;
-            DTobj.insertDT(globalclassname , globaltype , parent , CDTRef , &DTstart);
+            if(!DTobj.insertDT(globalclassname , globaltype , parent , CDTRef , &DTstart))
+            {
+              cout<<"Error: Redeclaration "<<endl;
+            }
 
             (*curr) = (*curr)->next;
             if (class_body())
@@ -563,7 +570,11 @@ bool globalflag = false;
       {
         if(DTtemp != NULL &&  DTtemp->Name == globalclassname )
       {
-        Fnobj.insertfn(globalclassname, "void" , globalparalist , globalclassname , &FNstart);
+        if(!Fnobj.insertfn(globalclassname, "void" , globalparalist , globalclassname , &FNstart))
+        {
+          cout<<"Error: Redeclaration "<<endl;
+        }
+        
       }
       else
       {
@@ -2344,16 +2355,23 @@ bool globalflag = false;
         (*curr) = (*curr)->next;
         if (OE())
         {
+          if(Type != "int" && Type != "float" && Type != "string" && Type != "char" && Type != "bool")
+          {
+            cout<<"Error: Not compatible condition:  "<<Type<<endl;
+          }
+          
           if ((*curr)->cp == ")")
           {
             (*curr) = (*curr)->next;
             if ((*curr)->cp == "{")
             {
+              globalcurrScope = STobj.createScope();
               (*curr) = (*curr)->next;
               if (MST())
               {
                 if ((*curr)->cp == "}")
                 {
+                  globalcurrScope = STobj.deleteScope();
                   (*curr) = (*curr)->next;
                   if (optional_else())
                   {
@@ -2417,11 +2435,13 @@ bool globalflag = false;
         (*curr) = (*curr)->next;
         if ((*curr)->cp == "{")
         {
+          globalcurrScope = STobj.createScope();
           (*curr) = (*curr)->next;
           if (MST())
           {
             if ((*curr)->cp == "}")
             {
+              globalcurrScope = STobj.deleteScope();
               (*curr) = (*curr)->next;
               return true;
             }
@@ -2467,17 +2487,23 @@ bool globalflag = false;
         (*curr) = (*curr)->next;
         if (OE())
         {
-          //(*curr) = (*curr)->next;
+          if(Type != "int" && Type != "float" && Type != "string" && Type != "char" && Type != "bool")
+          {
+            cout<<"Error: Not compatible condition:  "<<Type<<endl;
+          }
+
           if ((*curr)->cp == ")")
           {
             (*curr) = (*curr)->next;
             if ((*curr)->cp == "{")
             {
+              globalcurrScope = STobj.createScope();
               (*curr) = (*curr)->next;
               if (MST())
               {
                 if ((*curr)->cp == "}")
                 {
+                  globalcurrScope = STobj.deleteScope();
                   (*curr) = (*curr)->next;
                   return true;
                 }
@@ -2537,11 +2563,17 @@ bool globalflag = false;
         (*curr) = (*curr)->next;
         if (OE())
         {
+          if(Type != "int" && Type != "float" && Type != "string" && Type != "char" && Type != "bool")
+          {
+            cout<<"Error: Not compatible condition:  "<<Type<<endl;
+          }
+
           if ((*curr)->cp == ")")
           {
             (*curr) = (*curr)->next;
             if ((*curr)->cp == "{")
             {
+              globalcurrScope = STobj.createScope();
               (*curr) = (*curr)->next;
               if (case_st())
               {
@@ -2549,6 +2581,7 @@ bool globalflag = false;
                 {
                   if ((*curr)->cp == "}")
                   {
+                    globalcurrScope = STobj.deleteScope();
                     (*curr) = (*curr)->next;
                     return true;
                   }
@@ -2611,16 +2644,23 @@ bool globalflag = false;
         (*curr) = (*curr)->next;
         if (OE())                 
         {
+          if(Type != "int" && Type != "float" && Type != "string" && Type != "char" && Type != "bool")
+          {
+            cout<<"Error: Not compatible condition:  "<<Type<<endl;
+          }
+
           if ((*curr)->cp == ":")
           {
             (*curr) = (*curr)->next;
             if ((*curr)->cp == "{")
             {
+              globalcurrScope = STobj.createScope();
               (*curr) = (*curr)->next;
               if (MST())
               {
                 if ((*curr)->cp == "}")
                 {
+                  globalcurrScope = STobj.deleteScope();
                   (*curr) = (*curr)->next;
                   if (case_st())
                   {
@@ -2688,11 +2728,13 @@ bool globalflag = false;
           (*curr) = (*curr)->next;
           if ((*curr)->cp == "{")
           {
+            globalcurrScope = STobj.createScope();
             (*curr) = (*curr)->next;
             if (MST())
             {
               if ((*curr)->cp == "}")
               {
+                globalcurrScope = STobj.deleteScope();
                 (*curr) = (*curr)->next;
                 return true;
               }
@@ -2740,6 +2782,7 @@ bool globalflag = false;
       (*curr) = (*curr)->next;
       if ((*curr)->cp == "(")
       {
+        globalcurrScope = STobj.createScope();
         (*curr) = (*curr)->next;
         if (C1())
         {
@@ -2760,6 +2803,7 @@ bool globalflag = false;
                     {
                       if ((*curr)->cp == "}")
                       {
+                        globalcurrScope = STobj.deleteScope();
                         (*curr) = (*curr)->next;
                         return true;
                       }
@@ -2830,9 +2874,12 @@ bool globalflag = false;
   
       if ((*curr)->cp == "DT")
       {
+        globaltype = (*curr)->vp;
         (*curr) = (*curr)->next;
         if ((*curr)->cp == "ID")
         {
+          globalname = (*curr)->vp;
+          globalflag = false;
           (*curr) = (*curr)->next;
           if (dt_dec())
           {
@@ -2846,12 +2893,12 @@ bool globalflag = false;
         }
         else
         {
-          
           return false;
         }
       }
       else if ((*curr)->cp == "ID")
       {
+        globaltype = (*curr)->vp;
         (*curr) = (*curr)->next;
         if (ass_st())
         {
@@ -2884,6 +2931,10 @@ bool globalflag = false;
   
       if (OE())
       {
+        if(Type != "int" && Type !="float" && Type !="char" && Type !="bool" && Type !="string")
+        {
+          cout<<"Error: Not compatable condition at for loop "<<Type<<endl;
+        }
         return true;
       }
       else if( (*curr)->cp == ";" )
@@ -2904,6 +2955,7 @@ bool globalflag = false;
   
       if ((*curr)->cp == "ID")
       {
+        globaltype = (*curr)->vp;
         (*curr) = (*curr)->next;
         if (X11())
         {

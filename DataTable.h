@@ -32,7 +32,6 @@ class DataTable
         
         if(curr->Name == name )
         {
-          cout<<"Redeclaration error : "<<name<<"  "<<type << endl;
           return false;
         }
         else
@@ -44,7 +43,6 @@ class DataTable
 
             if(curr->Name == name)
               {
-              cout<<"Redeclaration Error: "<<name<<"  "<<type<<endl;
               return false;
               }
           }
@@ -65,7 +63,7 @@ DataTable* retAddress(string name , DataTable *start) //return curr address
 
   if(start == NULL)
   {
-    cout<<"CLASS NOT DECLEARED AT DATA TABLE!!"<<endl;
+    cout<<"Error: No defination found"<<endl;
     return NULL;
   }
   else
@@ -76,7 +74,6 @@ DataTable* retAddress(string name , DataTable *start) //return curr address
     {
       if(curr->Name == name)
       {
-        cout<<"Name : " <<curr->Name<<" Type: "<<curr->Type<<" (at DT) "<<endl;
         return curr;
       }
       curr = curr->next;
@@ -84,12 +81,11 @@ DataTable* retAddress(string name , DataTable *start) //return curr address
 
     if(curr->Name == name)
       {
-        cout<<"Name : " <<curr->Name<<"  Type: "<<curr->Type<<" (at DT) "<<endl;
         return curr;
       }
       else
       {
-        cout<<"CLASS NOT DECLEARED AT DATA TABLE!!"<<endl;
+        cout<<"Error: No defination found"<<endl;
         return NULL;
       }
       
@@ -104,7 +100,7 @@ void print(DataTable *start)
   {
     if(start==NULL)
     {
-      cout<<"List is empty"<<endl;
+      cout<<"Table is empty"<<endl;
     }
     else
     {
@@ -115,7 +111,7 @@ void print(DataTable *start)
         cout<<curr->Type<<"   ";
         cout<<curr->Parent<<"   "<<endl;
 
-        cout<<"Class Data Table of class : "<<curr->Name<<endl;
+        cout<<endl<<"Data Table of class : "<<curr->Name<<endl;
         cdtobj.print(curr->Ref);
         cout<<endl;
         curr=curr->next;
@@ -123,7 +119,7 @@ void print(DataTable *start)
         cout<<curr->Name<<"   ";
         cout<<curr->Type<<"   ";
         cout<<curr->Parent<<"   "<<endl;
-        cout<<"Class Data Table of class : "<<curr->Name<<endl;
+        cout<<endl<<"Data Table of class : "<<curr->Name<<endl;
         cdtobj.print(curr->Ref);
         cout<<endl;
     }

@@ -18,7 +18,6 @@ class WordBreak
     {  
       wordcout++;
     } 
-    
     split(charArr,wordcout);
   }
 

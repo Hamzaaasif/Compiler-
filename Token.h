@@ -169,10 +169,6 @@ public:
         settoken.lineno = this->lineno;
         list.insert(cp,vp,lineno,&start);
 
-        //cout << " CP : " << cp << "  VP : " << vp << "  Line no:  " << this->lineno << endl;
-        // cout<<" Token set cp : "<<settoken.cp;
-        // cout<<" Token set vp : "<<settoken.vp;
-        // cout<<" Token set lineno : "<<settoken.lineno<<endl;
       }
       else if (checkkeyword(word))
       {
@@ -332,11 +328,11 @@ public:
       //  list.print(&start);
 
       // cout<<list.start(&start);
-      cout<<"***************SYNTAX ANALYZER************** "<<endl<<endl;
+
+      cout<<endl<<"***************SYNTAX ANALYZER************** "<<endl<<endl;
        bool check = true;
        check = list.start(&start);
        cout<< check <<endl; 
-     // cout << " CP : " << this->cp << "  VP : " << this->vp << "  Line no:  " << this->lineno << endl;
     }
 
     else
@@ -348,7 +344,6 @@ public:
         settoken.lineno = this->lineno;
 
        list.insert(cp,vp,lineno,&start);
-      //cout << " CP : " << this->cp << "  VP : " << this->vp << "  Line no:  " << this->lineno << endl;
     }
   }
 

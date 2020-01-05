@@ -30,7 +30,6 @@ class clasDT
        clasDT *curr = *start;
        if(curr->Name == name)
            {
-            cout<<"Redeclaration Error : "<<name<<"  "<<type<<endl;
             return false;
            }
 
@@ -39,7 +38,6 @@ class clasDT
           curr = curr->next;
           if(curr->Name == name)
            {
-            cout<<"Redeclaration Error : "<<name<<"  "<<type<<endl;
             return false;
            }
         }
@@ -56,7 +54,7 @@ string lookupCDT(string name , clasDT *start ) // type return kryga
 
   if(start==NULL)
     {
-      cout<<"Not decleared"<<endl;
+      cout<<"Error: No defination found "<<endl;
       return "NULL";
     }
     else
@@ -66,7 +64,6 @@ string lookupCDT(string name , clasDT *start ) // type return kryga
       {
         if(curr->Name == name && curr->AM !="private") //private access not allowed
         {
-          cout<<"Name: "<<curr->Name<<"  Type: "<<curr->Type <<" AM : "<<curr->AM<<endl;
           return curr->Type;
         }
         curr=curr->next;
@@ -74,12 +71,11 @@ string lookupCDT(string name , clasDT *start ) // type return kryga
 
         if(curr->Name == name && curr->AM !="private")  //private access not allowed
         {
-          cout<<"Name: "<<curr->Name<<"  Type: "<<curr->Type <<" AM : "<<curr->AM<<endl;
           return curr->Type;
         }
         else
         {
-          cout<<"Not decleared or private attribute"<<endl;
+          cout<<"Error: No defination found or private attribute"<<endl;
           return "NULL";
         }
         
@@ -91,7 +87,7 @@ string lookupCDT(string name , clasDT *start ) // type return kryga
   {
     if(start==NULL)
     {
-      cout<<"List is empty"<<endl;
+      cout<<"Table is empty"<<endl;
     }
     else
     {
