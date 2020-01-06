@@ -64,7 +64,7 @@ string lookupFn(string name, string paralist , string classname , functionTable 
   {
     return "NULL";
   }
-  else if(curr-> Name == name && curr->ParaList==paralist && curr->ClassName == classname)
+  else if(curr-> Name == name && curr->ParaList==paralist && (curr->ClassName  == classname || curr->ClassName =="Global"))
   {
     return curr->RetType;
   }
@@ -73,7 +73,7 @@ string lookupFn(string name, string paralist , string classname , functionTable 
     while(curr->next!=NULL)
     {
       curr=curr->next;
-      if(curr-> Name == name && curr->ParaList==paralist && curr->ClassName == classname)
+      if(curr-> Name == name && curr->ParaList==paralist && (curr->ClassName == classname || curr->ClassName =="Global"))
           {
               return curr->RetType;
           }

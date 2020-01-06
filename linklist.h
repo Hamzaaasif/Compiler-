@@ -1211,6 +1211,7 @@ bool globalflag = false;
         globaltype = (*curr)->vp; //Type
         tempvar = globaltype;
         globalLeftType = STobj.lookupST(globaltype , STstart);
+        Type = globalLeftType;
         globalflag = false;
         (*curr) = (*curr)->next;
         if (SST1())
@@ -1961,14 +1962,14 @@ bool globalflag = false;
       if (OE())
       {
         globalRightType = Type;
-        Type = compatibilityCheck(templeft ,globalRightType,"",tempOperator);
+        Type = compatibilityCheck(templeft , globalRightType,"",tempOperator);
         if(Type == "NULL")
         {
-          cout<<"Error: Not compatible, Type: "<<Type<<" at line no: "<<(*curr)->lineno<<endl;
+          cout<<"Error: Not compatible, Type:  "<<Type<<" at line no: "<<(*curr)->lineno<<endl;
         }
         else
         {
-          cout<<"compatible, Type at assignment: "<<Type<<" at line no: "<<(*curr)->lineno<<endl;
+         // cout<<"compatible, Type: "<<Type<<endl;
         }
         return true;
       }
@@ -2015,12 +2016,32 @@ bool globalflag = false;
 
   bool intconstructor_dec()
   {
-
     
       if (arg())
       {
         if ((*curr)->cp == ")")
         {
+          DataTable *DTtemp  = DTobj.retAddress(globaltype , DTstart);
+          if(DTtemp!=NULL)
+          {
+            if(Fnobj.lookupFn(globaltype ,globalparalist,globaltype,FNstart) == "NULL")
+          {
+            cout<<"Error: Constructor not allowed "<<globaltype <<" at line no : " <<(*curr)->lineno<<endl;
+          }
+          else
+          {
+            if(!STobj.insertST(globalname,globaltype,globalcurrScope,&STstart))
+            {
+              cout<<"Error: Redeclaration "<<globalname <<" at line no "<<(*curr)->lineno<<endl;
+            }
+            
+          }
+          }
+          else
+          {
+            cout<<"Error: Constructor not allowed class not defined "<<globaltype <<" at line no : "<<globalparalist <<(*curr)->lineno<<endl;
+          }
+          
           (*curr) = (*curr)->next;
           if ((*curr)->cp == ";")
           {
@@ -2051,15 +2072,16 @@ bool globalflag = false;
 
   bool fn_call1()
   {  
-    
+
         if ((*curr)->cp == "(")
         {
+          string tempfnname = tempvar;
           string fnname = globalRightType;
           string ope = globalOperator;
           string classname = STobj.lookupST(tempvar , STstart); 
           if(classname=="NULL")
           {
-            cout<<"Error: No defination found " <<tempvar<<" at line no: "<<(*curr)->lineno<<endl;
+           // cout<<"Error: No defination found " <<tempvar<<" at line no: "<<(*curr)->lineno<<endl;
           }
           if(globalflag)
           {
@@ -2069,13 +2091,29 @@ bool globalflag = false;
           (*curr) = (*curr)->next;
           if (arg())
           {
+            if(Fnobj.lookupFn(tempfnname , globalparalist , globalclassname , FNstart) == "NULL")
+            {
+              cout<<"Function not defined  "<<tempfnname <<" class name "<< globalclassname <<" at line no "<<(*curr)->lineno <<endl;
+            }
+            else
+            {
+              //
+              Type = Fnobj.lookupFn(tempfnname , globalparalist , globalclassname , FNstart);
+              cout<<"Function done"  <<" "<< Type <<endl;
+            }
+            
+            
             if ((*curr)->cp == ")")
             {
-              Type = compatibilityCheck(classname , fnname , globalparalist , ope);
+              if(classname != "NULL")
+              {
+                Type = compatibilityCheck(classname , fnname , globalparalist , ope);
               if(Type=="NULL")
               {
                 cout<<"Error: Not compatible,Type: "<<Type<<" at line no: "<<(*curr)->lineno<<endl;
               }
+              }
+              
               (*curr) = (*curr)->next;
               return true;
             }
@@ -2278,10 +2316,6 @@ bool globalflag = false;
             if(Type == "NULL")
             {
               cout<<"Error: Not compatible,Type: "<<Type<<" at line no: "<<(*curr)->lineno<<endl;
-            }
-            else
-            {
-              cout<<"Compatibility at a.b = 5 is "<<Type<<endl;
             }
             globalLeftType = Type;
             globalflag = true;
@@ -2924,6 +2958,7 @@ bool globalflag = false;
                     {
                       if ((*curr)->cp == "}")
                       {
+                        
                         globalcurrScope = STobj.deleteScope();
                         (*curr) = (*curr)->next;
                         return true;
@@ -3339,7 +3374,7 @@ bool globalflag = false;
          globalLeftType = STobj.lookupST(tempvar , STstart);
          if(globalLeftType=="NULL")
          {
-           cout<<"Error: No defination found " <<tempvar<<" at line no: "<<(*curr)->lineno<<endl;
+           //cout<<"Error: No defination found " <<tempvar<<" at line no: "<<(*curr)->lineno<<endl;
          }
          globalflag = false;
 
