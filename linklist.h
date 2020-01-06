@@ -39,6 +39,7 @@ bool globalflag = false;
   clasDT classDTobj;
   string globalTM ="";
   string globalAM = "private";
+  DataTable *DTtemp;
 
   //compatibility
   string globalLeftType = "";
@@ -335,7 +336,7 @@ bool globalflag = false;
                   {
                     cout<<"Error: No defination found "<<globalclassname<<" at line no: "<<(*curr)->lineno<<endl;
                   }
-                  DTtemp->Ref = CDTRef;
+                 // DTtemp->Ref= CDTRef;
                   CDTRef = NULL;
                   globalclassname = "Global";
                   globalTM = "";
@@ -1213,6 +1214,17 @@ bool globalflag = false;
         globalLeftType = STobj.lookupST(globaltype , STstart);
         Type = globalLeftType;
         globalflag = false;
+
+        if(globalclassname != "Global" && Type == "NULL")
+        {
+          DataTable *DTtemp = DTobj.retAddress(globalclassname,DTstart);
+          if(DTtemp !=NULL)
+             {
+               Type = classDTobj.lookupCDT(tempvar,DTtemp->Ref);
+             }
+          
+        }
+
         (*curr) = (*curr)->next;
         if (SST1())
         {
@@ -1602,7 +1614,11 @@ bool globalflag = false;
           {
             cout<<"Error: Redeclaration "<<globalname<<" at line no: "<<(*curr)->lineno<<endl;
           }
-          
+          DataTable *DT = DTobj.retAddress(globalclassname,DTstart);
+          if(DT !=NULL)
+             {
+               DT->Ref = CDTRef;
+             }
           globalflag = false;
         }
 
@@ -1627,6 +1643,11 @@ bool globalflag = false;
               {
                 cout<<"Error: Redeclaration "<<globalname<<" at line no: "<<(*curr)->lineno<<endl;
               }
+              DataTable *DT = DTobj.retAddress(globalclassname,DTstart);
+              if(DT !=NULL)
+               {
+               DT->Ref = CDTRef;
+               }
               
               globalflag = false;
             }
@@ -1673,6 +1694,12 @@ bool globalflag = false;
           {
             cout<<"Error: Redeclaration "<<globalname<<" at line no: "<<(*curr)->lineno<<endl;
           }
+             DataTable *DT = DTobj.retAddress(globalclassname,DTstart);
+             if(DT !=NULL)
+             {
+               DT->Ref = CDTRef;
+             }
+             
           
           globalflag = false;
         }
@@ -1784,6 +1811,11 @@ bool globalflag = false;
           {
             cout<<"Error: Redeclaration "<<globalname<<" at line no: "<<(*curr)->lineno<<endl;
           }
+             DataTable *DT = DTobj.retAddress(globalclassname,DTstart);
+             if(DT !=NULL)
+             {
+               DT->Ref = CDTRef;
+             }
           
         }        
 
@@ -1809,6 +1841,11 @@ bool globalflag = false;
                     {
                       cout<<"Error: Redeclaration "<<globalname <<" at line no: "<<(*curr)->lineno<<endl;
                     }
+                    DataTable *DT = DTobj.retAddress(globalclassname,DTstart);
+                   if(DT !=NULL)
+                 {
+                   DT->Ref = CDTRef;
+                 }
                     
                   }
           }
@@ -1863,6 +1900,11 @@ bool globalflag = false;
               {
                 cout<<"Error: Redeclaration "<< globalname<< " at line no: "<<(*curr)->lineno<<endl;
               }
+              DataTable *DT = DTobj.retAddress(globalclassname,DTstart);
+              if(DT !=NULL)
+               {
+               DT->Ref = CDTRef;
+               }
                
             }
         (*curr) = (*curr)->next;

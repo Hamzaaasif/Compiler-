@@ -6,7 +6,7 @@ class DataTable
   public:
   string Name;
   string Type;
-  DataTable *Parent;
+  DataTable *Parent ;
   DataTable *next;
   clasDT *Ref;
   clasDT cdtobj;

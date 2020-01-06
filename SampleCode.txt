@@ -1,17 +1,26 @@
 class point
 {
   public:
-  point p;
   int number1;
   int number2;
 
   float square(int a)
   {
-    number1 = 1;
+    number2 = 4.5;
   }
   int print()
   {
     float f;
+  }
+};
+class square 
+{
+  public:
+  int a ;
+  point b;
+  int sum()
+  {
+   
   }
 };
 
