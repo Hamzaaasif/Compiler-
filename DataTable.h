@@ -24,6 +24,7 @@ class DataTable
     if(*start == NULL)
     {
       *start = ptr;
+      return true;
     }
     else
     {
@@ -63,7 +64,6 @@ DataTable* retAddress(string name , DataTable *start) //return curr address
 
   if(start == NULL)
   {
-    cout<<"Error: No defination found"<<endl;
     return NULL;
   }
   else
@@ -85,7 +85,6 @@ DataTable* retAddress(string name , DataTable *start) //return curr address
       }
       else
       {
-        cout<<"Error: No defination found"<<endl;
         return NULL;
       }
       
@@ -109,17 +108,16 @@ void print(DataTable *start)
       {
         cout<<curr->Name<<"   ";
         cout<<curr->Type<<"   ";
-        cout<<curr->Parent<<"   "<<endl;
-
-        cout<<endl<<"Data Table of class : "<<curr->Name<<endl;
+        cout<<curr->Parent<<"   ";
+        cout<<endl<<"*****Data Table of class "<<curr->Name<<"*****"<<endl;
         cdtobj.print(curr->Ref);
         cout<<endl;
         curr=curr->next;
       }
         cout<<curr->Name<<"   ";
         cout<<curr->Type<<"   ";
-        cout<<curr->Parent<<"   "<<endl;
-        cout<<endl<<"Data Table of class : "<<curr->Name<<endl;
+        cout<<curr->Parent<<"   ";
+        cout<<endl<<"*****Data Table of class "<<curr->Name<<"*****"<<endl;
         cdtobj.print(curr->Ref);
         cout<<endl;
     }

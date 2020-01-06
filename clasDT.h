@@ -24,6 +24,7 @@ class clasDT
     if(*start == NULL)
     {
       *start = ptr;
+      return true;
     }
     else
     {
@@ -54,7 +55,6 @@ string lookupCDT(string name , clasDT *start ) // type return kryga
 
   if(start==NULL)
     {
-      cout<<"Error: No defination found "<<endl;
       return "NULL";
     }
     else
@@ -75,7 +75,6 @@ string lookupCDT(string name , clasDT *start ) // type return kryga
         }
         else
         {
-          cout<<"Error: No defination found or private attribute"<<endl;
           return "NULL";
         }
         

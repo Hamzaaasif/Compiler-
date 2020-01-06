@@ -24,6 +24,7 @@ class functionTable
     if(*start == NULL)
     {
       *start = ptr;
+      return true;
     }
     else
     {
@@ -61,12 +62,10 @@ string lookupFn(string name, string paralist , string classname , functionTable 
   functionTable *curr = start;
   if(start == NULL)
   {
-    cout<<"undeclared "<<endl;
     return "NULL";
   }
   else if(curr-> Name == name && curr->ParaList==paralist && curr->ClassName == classname)
   {
-    cout<<"Return Type: "<< curr->RetType << endl;
     return curr->RetType;
   }
   else
@@ -76,7 +75,6 @@ string lookupFn(string name, string paralist , string classname , functionTable 
       curr=curr->next;
       if(curr-> Name == name && curr->ParaList==paralist && curr->ClassName == classname)
           {
-              cout<<"Return Type: "<< curr->RetType << endl;
               return curr->RetType;
           }
     }
@@ -84,12 +82,6 @@ string lookupFn(string name, string paralist , string classname , functionTable 
   }
   
 }
-
-
-
-
-
-
 
 
 void printFN(functionTable *start)

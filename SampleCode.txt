@@ -2,20 +2,29 @@ class vector
 {
   public:
   int a;
-  int sum(int a,float b )
+  int sum(float b )
   {
-    for(i=10;i<10;i+=4)
-    {
-
-    }
+    int a = 7;
+    
   }
 };
-class point : public vector
+class point 
 {
+  int a;
+  vector m;
 };
-vector vec;
+point p;
 int temp;
+temp = p.m.sum(4.6);
+
 void main()
 {
-  vector vec;
+  int a;
+  point p ;
+  vector v;
+  for(int i=4.5;i<10;i+=4)
+    {
+      p.m.sum(4.6)= 5;
+    }
+
 }$

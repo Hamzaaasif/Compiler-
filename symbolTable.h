@@ -23,13 +23,13 @@ class symbolTable
     if(*start == NULL)
     {
       *start = ptr;
+      return true;
     }
     else
     {
       symbolTable *curr = *start;
       if(curr->Name == name  && curr->scope == scope)
       {
-        cout<<"Error: Redeclaration "<<name<< endl;
         return false;
       }
       else
@@ -73,15 +73,12 @@ int deleteScope()
 }
 
 
-
 string lookupST(string name , symbolTable *start)
 {
   if(start == NULL)
   {
-    cout<<"Error: No defination found "<<endl;
     return "NULL";
   }
-
   else
   {
     string retType="NULL";
@@ -112,9 +109,9 @@ string lookupST(string name , symbolTable *start)
 
       if(curr->Name == name )
         {
+          s = scopeStack;
           while(!s.empty())
           {
-            s = scopeStack;
              if(curr->scope != s.top() )
              {
                s.pop();
@@ -131,7 +128,6 @@ string lookupST(string name , symbolTable *start)
         }
         else
         {
-          cout<<"Error: No defination found "<<endl;
           return "NULL";
         }
   

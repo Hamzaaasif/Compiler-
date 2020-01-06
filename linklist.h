@@ -4,7 +4,6 @@ using namespace std;
 #include"functionTable.h"
 #include"DataTable.h"
 #include"symbolTable.h"
-//#include"Token.h"
 
 class linklist
 {
@@ -96,7 +95,7 @@ bool globalflag = false;
               {
                 if(!Fnobj.insertfn (globalname , globalRetType , globalparalist , "Global" , &FNstart))
                 {
-                  cout<<"Error: Redeclaration "<<endl;
+                  cout<<"Error: Redeclaration "<<globalname<<" at line no: "<<(*curr)->lineno<<endl;
                 }
                 
 
@@ -115,17 +114,16 @@ bool globalflag = false;
                       if ((*curr)->cp == "$")
                       {
                         globalcurrScope = STobj.deleteScope(); //Global  scope end
-                        cout<<endl<<endl<<"Symbol Table: "<<endl;
+                        cout<<endl<<endl<<"*****Symbol Table: ******"<<endl;
                         STobj.printST(STstart);
-                        cout<<endl<<endl;
 
-                        cout<<endl<<endl<<"Function Table: "<<endl;
+                        cout<<endl<<endl<<"*******Function Table: ********"<<endl;
                         Fnobj.printFN(FNstart);
-                        cout<<endl<<endl;
+                        
 
-                        cout<<endl<<endl<<"Data Table: "<<endl;
+                        cout<<endl<<endl<<"------------Data Table---------------"<<endl;
                         DTobj.print(DTstart);
-                        cout<<endl<<endl;
+                        cout<<endl;
 
                         cout << "File end" << endl;
                         return true;
@@ -217,8 +215,12 @@ bool globalflag = false;
 
     else if ((*curr)->cp == "ID")
       {
-        globaltype = (*curr)->vp; //name in case of ass_st and type in case of obj|fn dec i.e ID
-
+        globaltype = (*curr)->vp; 
+        Type = STobj.lookupST(globaltype , STstart);
+        if(Type == "NULL")
+         {
+         // cout<<"Error: No defination found " <<Type<<" at line no: "<<(*curr)->lineno<<endl;
+         }
 
         (*curr) = (*curr)->next;
         if (defs1())
@@ -317,7 +319,7 @@ bool globalflag = false;
             CDTRef = NULL;
             if(!DTobj.insertDT(globalclassname , globaltype , parent , CDTRef , &DTstart))
             {
-              cout<<"Error: Redeclaration "<<endl;
+              cout<<"Error: Redeclaration "<<globalclassname<<" at line no: "<<(*curr)->lineno<<endl;
             }
 
             (*curr) = (*curr)->next;
@@ -329,6 +331,10 @@ bool globalflag = false;
                 if ((*curr)->cp == ";")
                 {
                   DataTable *DTtemp = DTobj.retAddress(globalclassname , DTstart);
+                  if(DTtemp == NULL)
+                  {
+                    cout<<"Error: No defination found "<<globalclassname<<" at line no: "<<(*curr)->lineno<<endl;
+                  }
                   DTtemp->Ref = CDTRef;
                   CDTRef = NULL;
                   globalclassname = "Global";
@@ -565,6 +571,10 @@ bool globalflag = false;
     {
 
       DataTable *DTtemp = DTobj.retAddress(globaltype , DTstart) ;
+      if(DTtemp == NULL)
+      {
+        cout<<"Error: No defination found "<<globaltype<<" at line no: "<<(*curr)->lineno<<endl;
+      }
       (*curr) = (*curr)->next;
       if (para())
       {
@@ -572,13 +582,13 @@ bool globalflag = false;
       {
         if(!Fnobj.insertfn(globalclassname, "void" , globalparalist , globalclassname , &FNstart))
         {
-          cout<<"Error: Redeclaration "<<endl;
+          cout<<"Error: Redeclaration "<<globalclassname<<" at line no: "<<(*curr)->lineno<<endl;
         }
         
       }
       else
       {
-        cout<<" CLASS NOT DEFINED CONSTRUCTOR NOT ALLOWED !!"<<endl;
+        cout<<"Error: Class not defined or constructor not allowed "<<globalclassname<<" at line no: "<<(*curr)->lineno<<endl;
       }
 
         if ((*curr)->cp == ")")
@@ -856,8 +866,11 @@ bool globalflag = false;
         if ((*curr)->cp == ")")
         {
           (*curr) = (*curr)->next;
-
-           Fnobj.insertfn(tempname , temptype , globalparalist , globalclassname , &FNstart); 
+          if(!Fnobj.insertfn(tempname , temptype , globalparalist , globalclassname , &FNstart))
+          {
+            cout<<"Error: Redeclaration "<<tempname<<" at line no: "<<(*curr)->lineno<<endl;
+          }
+            
  
             if ((*curr)->cp == "{")
             {
@@ -960,8 +973,11 @@ bool globalflag = false;
 
           globalname = (*curr)->vp;
           (*curr) = (*curr)->next;
-
-          STobj.insertST(globalname , globaltype , globalcurrScope , &STstart);
+          if(!STobj.insertST(globalname , globaltype , globalcurrScope , &STstart))
+          {
+            cout<<"Error: Redeclaration "<<globalname<<" at line no: "<<(*curr)->lineno<<endl;
+          }
+          
           return true;
         }
         else
@@ -991,7 +1007,11 @@ bool globalflag = false;
           globalname = (*curr)->vp;
 
           (*curr) = (*curr)->next;
-          STobj.insertST(globalname , globaltype , globalcurrScope , &STstart);
+          if(!STobj.insertST(globalname , globaltype , globalcurrScope , &STstart))
+          {
+            cout<<"Error: Redeclaration "<<globalname<<" at line no: "<<(*curr)->lineno<<endl;
+          }
+          
           return true;
         }
 
@@ -1023,6 +1043,10 @@ bool globalflag = false;
             if(DTtemp != NULL)
             {
               parent = DTtemp;
+            }
+            else
+            {
+              cout<<"Error: No defination found "<<(*curr)->vp<<" at line no: "<<(*curr)->lineno<<endl;
             }
             (*curr) = (*curr)->next;
             return true;
@@ -1185,7 +1209,9 @@ bool globalflag = false;
       else if ((*curr)->cp == "ID")
       {
         globaltype = (*curr)->vp; //Type
-
+        tempvar = globaltype;
+        globalLeftType = STobj.lookupST(globaltype , STstart);
+        globalflag = false;
         (*curr) = (*curr)->next;
         if (SST1())
         {
@@ -1415,6 +1441,11 @@ bool globalflag = false;
 
       if ((*curr)->cp == "AOP")
       {
+        if(!STobj.insertST(globalname , globaltype , globalcurrScope, &STstart))
+        {
+          cout<<"Error: Redeclaration "<<globalname<<" at line no: "<<(*curr)->lineno<<endl;
+        }
+        globalOperator = (*curr)->vp;
         (*curr) = (*curr)->next;
         if (init2())
         {
@@ -1441,8 +1472,16 @@ bool globalflag = false;
 
   bool init2()
   {
+    string tempinit2 = globalOperator;
+    string leftinit = globaltype;
       if (OE())
       {
+        string temptype = compatibilityCheck(leftinit , Type ,"",tempinit2 );
+        if(temptype =="NULL")
+        {
+          cout<<"Error: Not compatible,Type: "<<temptype <<" at line no: "<<(*curr)->lineno<<endl;
+        }
+        
         if ((*curr)->cp == ";")
         {
           (*curr) = (*curr)->next;
@@ -1550,11 +1589,19 @@ bool globalflag = false;
 
         if(!globalflag)
         {
-          STobj.insertST(globalname , globaltype , globalcurrScope , &STstart); //inserting in symbol table
+          if(!STobj.insertST(globalname , globaltype , globalcurrScope , &STstart))
+          {
+            cout<<"Error: Redeclaration "<<globalname<<" at line no: "<<(*curr)->lineno<<endl;
+          }
+          
         }
         else
         {
-          classDTobj.insertCDT(globalname , globaltype , globalAM , globalTM , &CDTRef);
+          if(!classDTobj.insertCDT(globalname , globaltype , globalAM , globalTM , &CDTRef))
+          {
+            cout<<"Error: Redeclaration "<<globalname<<" at line no: "<<(*curr)->lineno<<endl;
+          }
+          
           globalflag = false;
         }
 
@@ -1567,11 +1614,19 @@ bool globalflag = false;
           {
             if(!globalflag)
              {
-               STobj.insertST(globalname , globaltype , globalcurrScope , &STstart); //inserting in symbol table
+               if(!STobj.insertST(globalname , globaltype , globalcurrScope , &STstart))
+               {
+                 cout<<"Error: Redeclaration "<<globalname<<" at line no: "<<(*curr)->lineno<<endl;
+               }
+               
             }
             else
             {
-              classDTobj.insertCDT(globalname , globaltype , globalAM , globalTM , &CDTRef);
+              if(!classDTobj.insertCDT(globalname , globaltype , globalAM , globalTM , &CDTRef))
+              {
+                cout<<"Error: Redeclaration "<<globalname<<" at line no: "<<(*curr)->lineno<<endl;
+              }
+              
               globalflag = false;
             }
           }
@@ -1605,11 +1660,19 @@ bool globalflag = false;
       {
         if(globalflag == false)
         {
-         STobj.insertST(globalname , globaltype , globalcurrScope , &STstart); //inserting in symbol table
+          if(!STobj.insertST(globalname , globaltype , globalcurrScope , &STstart))
+          {
+            cout<<"Error: Redeclaration "<<globalname<<" at line no: "<<(*curr)->lineno<<endl;
+          }
+         
         }
         else
         {
-          classDTobj.insertCDT(globalname , globaltype , globalAM , globalTM , &CDTRef);
+          if(!classDTobj.insertCDT(globalname , globaltype , globalAM , globalTM , &CDTRef))
+          {
+            cout<<"Error: Redeclaration "<<globalname<<" at line no: "<<(*curr)->lineno<<endl;
+          }
+          
           globalflag = false;
         }
 
@@ -1700,16 +1763,27 @@ bool globalflag = false;
   bool list2()
   {
     DataTable* templist2 = DTobj.retAddress(globaltype , DTstart);
+    if(templist2 == NULL)
+    {
+      cout<<"Error: No defination found "<<globaltype<<" at line no: "<<(*curr)->lineno<<endl;
+    }
       if ((*curr)->cp == ",")
       {
-       // DataTable* templist2 = DTobj.retAddress(globaltype , DTstart);
         if(globalflag == false && templist2 != NULL)
         {
-         STobj.insertST(globalname , globaltype , globalcurrScope , &STstart); //inserting in symbol table
+          if(!STobj.insertST(globalname , globaltype , globalcurrScope , &STstart))
+          {
+            cout<<"Error: Redeclaration "<<globalname<<" at line no: "<<(*curr)->lineno<<endl;
+          }
+         
         }
         else if(templist2 != NULL)
         {
-          classDTobj.insertCDT(globalname , globaltype , globalAM , globalTM , &CDTRef);
+          if(!classDTobj.insertCDT(globalname , globaltype , globalAM , globalTM , &CDTRef))
+          {
+            cout<<"Error: Redeclaration "<<globalname<<" at line no: "<<(*curr)->lineno<<endl;
+          }
+          
         }        
 
         (*curr) = (*curr)->next;
@@ -1722,12 +1796,19 @@ bool globalflag = false;
 
               if(globalflag == false && templist2!=NULL)
                 {
-                  cout<<"";
-                 STobj.insertST(globalname , globaltype , globalcurrScope , &STstart); //inserting in symbol table
+                  if(!STobj.insertST(globalname , globaltype , globalcurrScope , &STstart))
+                  {
+                    cout<<"Error: Redeclaration "<<globalname<<" at line no: "<<(*curr)->lineno<<endl;
+                  }
+                 
                 }
                else if(templist2 != NULL)
                   {
-                    classDTobj.insertCDT(globalname , globaltype , globalAM , globalTM , &CDTRef);
+                    if(!classDTobj.insertCDT(globalname , globaltype , globalAM , globalTM , &CDTRef))
+                    {
+                      cout<<"Error: Redeclaration "<<globalname <<" at line no: "<<(*curr)->lineno<<endl;
+                    }
+                    
                   }
           }
 
@@ -1769,11 +1850,19 @@ bool globalflag = false;
       {
         if(globalflag == false && templist2 != NULL)
             {
-             STobj.insertST(globalname , globaltype , globalcurrScope , &STstart); //inserting in symbol table
+              if(!STobj.insertST(globalname , globaltype , globalcurrScope , &STstart))
+              {
+                cout<<"Error: Redeclaration "<<globalname<<" at line no: "<<(*curr)->lineno<<endl;
+              }
+             
             }
         else if(templist2 != NULL)
             {
-               classDTobj.insertCDT(globalname , globaltype , globalAM , globalTM , &CDTRef);
+              if(!classDTobj.insertCDT(globalname , globaltype , globalAM , globalTM , &CDTRef))
+              {
+                cout<<"Error: Redeclaration "<< globalname<< " at line no: "<<(*curr)->lineno<<endl;
+              }
+               
             }
         (*curr) = (*curr)->next;
         return true;
@@ -1861,18 +1950,25 @@ bool globalflag = false;
     
     if ((*curr)->cp == "AOP")
     {
-      string templeft = STobj.lookupST(globaltype , STstart);
+      string templeft = Type;
+      if(templeft == "NULL")
+      {
+        cout<<"Error: No defination found  " <<globaltype<<" at line no: "<<(*curr)->lineno<<endl;
+      }
       string tempOperator = (*curr)->vp;
 
       (*curr) = (*curr)->next;
       if (OE())
       {
         globalRightType = Type;
-        cout<<"Left Type:  "<<templeft <<"   Right Type:  "<<globalRightType <<"    Operator :  "<<tempOperator<<endl;
         Type = compatibilityCheck(templeft ,globalRightType,"",tempOperator);
-        if(Type != "NULL")
+        if(Type == "NULL")
         {
-          cout<<"Compatible Type : "<<Type<<endl;
+          cout<<"Error: Not compatible, Type: "<<Type<<" at line no: "<<(*curr)->lineno<<endl;
+        }
+        else
+        {
+          cout<<"compatible, Type at assignment: "<<Type<<" at line no: "<<(*curr)->lineno<<endl;
         }
         return true;
       }
@@ -1961,19 +2057,25 @@ bool globalflag = false;
           string fnname = globalRightType;
           string ope = globalOperator;
           string classname = STobj.lookupST(tempvar , STstart); 
+          if(classname=="NULL")
+          {
+            cout<<"Error: No defination found " <<tempvar<<" at line no: "<<(*curr)->lineno<<endl;
+          }
           if(globalflag)
           {
             classname = Type;
             globalflag = false;
           }
-          cout<<"Function name = " <<fnname<<"         Class Name = "<<classname <<endl;
           (*curr) = (*curr)->next;
           if (arg())
           {
             if ((*curr)->cp == ")")
             {
               Type = compatibilityCheck(classname , fnname , globalparalist , ope);
-              cout<<"Parameter list : "<<globalparalist<<endl<<"Compatible Type Of function : "<<Type<<endl;
+              if(Type=="NULL")
+              {
+                cout<<"Error: Not compatible,Type: "<<Type<<" at line no: "<<(*curr)->lineno<<endl;
+              }
               (*curr) = (*curr)->next;
               return true;
             }
@@ -2162,11 +2264,30 @@ bool globalflag = false;
   {
     if((*curr)->cp == ".")
     {
-    
+      globalOperator = (*curr)->vp;
+
       (*curr) = (*curr)->next;
       if((*curr)->cp == "ID")
       {
+        globalRightType = (*curr)->vp;
         (*curr) = (*curr)->next;
+
+        if((*curr)->vp != "(")
+        {
+           Type = compatibilityCheck(globalLeftType , globalRightType,"",globalOperator);
+            if(Type == "NULL")
+            {
+              cout<<"Error: Not compatible,Type: "<<Type<<" at line no: "<<(*curr)->lineno<<endl;
+            }
+            else
+            {
+              cout<<"Compatibility at a.b = 5 is "<<Type<<endl;
+            }
+            globalLeftType = Type;
+            globalflag = true;
+        }
+
+
         if(L1())
         {
          return true;
@@ -2357,7 +2478,7 @@ bool globalflag = false;
         {
           if(Type != "int" && Type != "float" && Type != "string" && Type != "char" && Type != "bool")
           {
-            cout<<"Error: Not compatible condition:  "<<Type<<endl;
+            cout<<"Error: Not compatible condition,Type: "<<Type<<" at line no: "<<(*curr)->lineno<<endl;
           }
           
           if ((*curr)->cp == ")")
@@ -2489,7 +2610,7 @@ bool globalflag = false;
         {
           if(Type != "int" && Type != "float" && Type != "string" && Type != "char" && Type != "bool")
           {
-            cout<<"Error: Not compatible condition:  "<<Type<<endl;
+            cout<<"Error: Not compatible condition,Type: "<<Type<<" at line no: "<<(*curr)->lineno<<endl;
           }
 
           if ((*curr)->cp == ")")
@@ -2563,9 +2684,9 @@ bool globalflag = false;
         (*curr) = (*curr)->next;
         if (OE())
         {
-          if(Type != "int" && Type != "float" && Type != "string" && Type != "char" && Type != "bool")
+          if(Type != "int" && Type != "char" && Type != "bool")
           {
-            cout<<"Error: Not compatible condition:  "<<Type<<endl;
+            cout<<"Error: Not compatible condition<Type: "<<Type<<" at line no: "<<(*curr)->lineno<<endl;
           }
 
           if ((*curr)->cp == ")")
@@ -2644,9 +2765,9 @@ bool globalflag = false;
         (*curr) = (*curr)->next;
         if (OE())                 
         {
-          if(Type != "int" && Type != "float" && Type != "string" && Type != "char" && Type != "bool")
+          if(Type != "int"  && Type != "char" && Type != "bool")
           {
-            cout<<"Error: Not compatible condition:  "<<Type<<endl;
+            cout<<"Error: Not compatible condition,Type: "<<Type<<" at line no: "<<(*curr)->lineno<<endl;
           }
 
           if ((*curr)->cp == ":")
@@ -2815,7 +2936,7 @@ bool globalflag = false;
                     }
                     else
                     {
-                      
+
                       return false;
                     }
                   }
@@ -2899,6 +3020,13 @@ bool globalflag = false;
       else if ((*curr)->cp == "ID")
       {
         globaltype = (*curr)->vp;
+        Type = STobj.lookupST(globaltype , STstart);
+        if(Type == "NULL")
+         {
+          cout<<"Error: No defination found " <<Type<<" at line no: "<<(*curr)->lineno<<endl;
+         }
+
+
         (*curr) = (*curr)->next;
         if (ass_st())
         {
@@ -2933,7 +3061,7 @@ bool globalflag = false;
       {
         if(Type != "int" && Type !="float" && Type !="char" && Type !="bool" && Type !="string")
         {
-          cout<<"Error: Not compatable condition at for loop "<<Type<<endl;
+          cout<<"Error: Not compatable condition at for loop,Type: "<<Type<<" at line no: "<<(*curr)->lineno<<endl;
         }
         return true;
       }
@@ -2956,6 +3084,12 @@ bool globalflag = false;
       if ((*curr)->cp == "ID")
       {
         globaltype = (*curr)->vp;
+        Type = STobj.lookupST(globaltype , STstart);
+        if(Type == "NULL")
+         {
+          cout<<"Error: No defination found " <<Type<<" at line no: "<<(*curr)->lineno<<endl;
+         }
+         
         (*curr) = (*curr)->next;
         if (X11())
         {
@@ -3056,6 +3190,10 @@ bool globalflag = false;
         {
           globalRightType = Type;
           Type = compatibilityCheck(globalLeftType , globalRightType , "" , globalOperator); 
+          if(Type=="NULL")
+          {
+            cout<<"Error: Not compatible,Type: "<<Type<<" at line no: "<<(*curr)->lineno<<endl;
+          }
           if(OEE())
           {
             return true;
@@ -3199,6 +3337,10 @@ bool globalflag = false;
       {
          tempvar = (*curr)->vp; //left type of operator 
          globalLeftType = STobj.lookupST(tempvar , STstart);
+         if(globalLeftType=="NULL")
+         {
+           cout<<"Error: No defination found " <<tempvar<<" at line no: "<<(*curr)->lineno<<endl;
+         }
          globalflag = false;
 
 
@@ -3238,6 +3380,10 @@ bool globalflag = false;
         if(globalflag == false)
         {
           Type = STobj.lookupST(tempvar , STstart);
+          if(Type=="NULL")
+          {
+            cout<<"Error: No defination found " <<tempvar<<" at line no: "<<(*curr)->lineno<<endl;
+          }
         }
         globalflag = false;
         return true;
@@ -3253,8 +3399,6 @@ bool globalflag = false;
   { 
       if ((*curr)->cp == ".")
       {
-        //globalLeftType = STobj.lookupST(tempvar , STstart);
-        cout<<"           Temp var: "<<tempvar<<endl;
         globalOperator = (*curr)->vp;
 
         (*curr) = (*curr)->next;
@@ -3264,8 +3408,11 @@ bool globalflag = false;
           if((*curr)->next->cp != "(" )
           {
             Type = compatibilityCheck(globalLeftType , globalRightType,"",globalOperator);
+            if(Type=="NULL")
+            {
+              cout<<"Error: Not compatible,Type: "<<Type<<" at line no: "<<(*curr)->lineno<<endl;
+            }
             globalLeftType = Type;
-            cout<<"      Type dot : "<< Type <<endl<<endl;
             globalflag = true;
           }
           
@@ -3308,6 +3455,10 @@ bool globalflag = false;
         {
           globalRightType = Type;
           Type = compatibilityCheck(globalLeftType , globalRightType , "" , globalOperator); 
+          if(Type=="NULL")
+          {
+            cout<<"Error: Not compatible, Type: "<<Type<<" at line no: "<<(*curr)->lineno<<endl;
+          }
           if (AEE())
           {
             return true;
@@ -3349,6 +3500,10 @@ bool globalflag = false;
         {
           globalRightType = Type;
           Type = compatibilityCheck(globalLeftType , globalRightType , "" , globalOperator);
+          if(Type=="NULL")
+          {
+            cout<<"Error: Not compatible,Type: "<<Type<<" at line no: "<<(*curr)->lineno<<endl;
+          }
           if (PEE())
           {
             return true;
@@ -3388,6 +3543,10 @@ bool globalflag = false;
         {
           globalRightType = Type;
           Type = compatibilityCheck(globalLeftType , globalRightType , "" , globalOperator); 
+          if(Type=="NULL")
+          {
+            cout<<"Error: Not compatible,Type: "<<Type<<" at line no: "<<(*curr)->lineno<<endl;
+          }
 
           if (MEE())
           {
@@ -3428,6 +3587,10 @@ bool globalflag = false;
         {
           globalRightType = Type;
           Type = compatibilityCheck(globalLeftType , globalRightType , "" , globalOperator); 
+          if(Type=="NULL")
+          {
+            cout<<"Error: Not compatible,Type: "<<Type<<" at line no: "<<(*curr)->lineno<<endl;
+          }
           if (REE())
           {
             return true;
@@ -3456,23 +3619,23 @@ bool globalflag = false;
 
 string compatibilityCheck(string leftType , string rightType ,string paralist ,string Operator) 
 {
-  if( (leftType == "int" && rightType == "int") && (Operator == "+" || Operator == "-" || Operator == "*" || Operator == "/" || Operator == "%" || Operator == "<" || Operator == ">" || Operator == "<=" || Operator == ">=" || Operator == "!=" || Operator == "==" || Operator == "=" ||  Operator == "+=" || Operator == "-=" || Operator == "*=" || Operator == "/=" || Operator == "%=" ) )
+  if( (leftType == "int" && rightType == "int") && (Operator == "+" || Operator == "-" || Operator == "*" || Operator == "/" || Operator == "%" || Operator == "<" || Operator == ">" || Operator == "<=" || Operator == ">=" || Operator == "!=" || Operator == "==" || Operator == "=" ||  Operator == "+=" || Operator == "-=" || Operator == "*=" || Operator == "/=" || Operator == "%=" || Operator == "&&" || Operator == "||" ) )
   {
     return "int";
   }
-  else if( ((leftType == "int" && rightType == "float")  || (leftType == "float" && rightType == "int") || (leftType == "float" && rightType == "float") )  &&  ( Operator == "+" || Operator == "-" || Operator == "*" || Operator == "/" || Operator == "%" || Operator == "<" || Operator == ">" || Operator == "<=" || Operator == ">=" || Operator == "!=" || Operator == "==" || Operator == "=" ||  Operator == "+=" || Operator == "-=" || Operator == "*=" || Operator == "/=" || Operator == "%=" ) )
+  else if( ((leftType == "int" && rightType == "float")  || (leftType == "float" && rightType == "int") || (leftType == "float" && rightType == "float") )  &&  ( Operator == "+" || Operator == "-" || Operator == "*" || Operator == "/" || Operator == "%" || Operator == "<" || Operator == ">" || Operator == "<=" || Operator == ">=" || Operator == "!=" || Operator == "==" || Operator == "=" ||  Operator == "+=" || Operator == "-=" || Operator == "*=" || Operator == "/=" || Operator == "%="  || Operator == "&&" || Operator == "||") )
   {
     return "float";
   }
-  else if( (leftType == "string" && rightType == "string") && (Operator == "+" || Operator=="+=" || Operator=="="  || Operator == "<" || Operator == ">" || Operator == "<=" || Operator == ">=" || Operator == "!=" || Operator == "==" ) )
+  else if( (leftType == "string" && rightType == "string") && (Operator == "+" || Operator=="+=" || Operator=="="  || Operator == "<" || Operator == ">" || Operator == "<=" || Operator == ">=" || Operator == "!=" || Operator == "==" || Operator == "&&" || Operator == "||" ) )
   {
     return "string";
   }
-  else if( leftType == "bool" && rightType == "bool"  && ( Operator=="="  || Operator == "<" || Operator == ">" || Operator == "<=" || Operator == ">=" || Operator == "!=" || Operator == "=="  )  )
+  else if( leftType == "bool" && rightType == "bool"  && ( Operator=="="  || Operator == "<" || Operator == ">" || Operator == "<=" || Operator == ">=" || Operator == "!=" || Operator == "==" || Operator == "&&" || Operator == "||" )  )
   {
     return "bool";
   }
-  else if( leftType == "char" && rightType == "char"  && ( Operator=="="  || Operator == "<" || Operator == ">" || Operator == "<=" || Operator == ">=" || Operator == "!=" || Operator == "=="  )  )
+  else if( leftType == "char" && rightType == "char"  && ( Operator=="="  || Operator == "<" || Operator == ">" || Operator == "<=" || Operator == ">=" || Operator == "!=" || Operator == "==" || Operator == "&&" || Operator == "||" )  )
   {
     return "char";
   }
@@ -3484,8 +3647,8 @@ string compatibilityCheck(string leftType , string rightType ,string paralist ,s
     DTtemp = DTobj.retAddress(leftType , DTstart);
     if(DTtemp != NULL)
     {
-      CDTtemp = classDTobj.lookupCDT(rightType , DTtemp->Ref); //if right side is the attribute of class
-      string fntype = Fnobj.lookupFn(rightType , paralist , leftType ,FNstart); //if its a function
+      CDTtemp = classDTobj.lookupCDT(rightType , DTtemp->Ref);
+      string fntype = Fnobj.lookupFn(rightType , paralist , leftType ,FNstart); 
       if(CDTtemp != "NULL") //for atribute a.b
       {
        return CDTtemp;
@@ -3501,26 +3664,20 @@ string compatibilityCheck(string leftType , string rightType ,string paralist ,s
       }
       else
       {
-        cout<<"               class undecleared!!   "<<endl;
         return "NULL";
       }
     }
     else
     {
-      cout<<"Not compatible (at chk comp fn)"<<endl;
       return "NULL";
     }
 
   }
     else
     {
-      cout<<"Not compatible (at chk comp fn)"<<endl;
       return "NULL";
     }
-  
 }
-
-
 
   void print(linklist **start)
   {
